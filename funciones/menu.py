@@ -46,6 +46,6 @@ def guardar_tabla() -> None:
             expanded=False
         )
         time.sleep(1)
-        status.empty()
+        st.rerun()
 
 
