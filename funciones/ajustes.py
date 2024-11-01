@@ -5,10 +5,10 @@ import subprocess
 import datetime
 import json
 import os
-import general as gf
+import funciones.general as fg
 
-def crear_listado_de_fechas(primera_fecha: str, dobles: list) -> list:
-    fecha = gf.string_a_fecha(primera_fecha)
+def crear_listado_de_fechas(primera_fecha: str, *dobles) -> list:
+    fecha = fg.string_a_fecha(primera_fecha)
     dias = 7
     fechas = []
     n_semanas = 50 - len(dobles)
@@ -25,3 +25,6 @@ def crear_listado_de_fechas(primera_fecha: str, dobles: list) -> list:
             return ["-"]
 
     return fechas
+
+def crear_ajustes_del_programa() -> None:
+    pass

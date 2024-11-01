@@ -2,7 +2,7 @@
 
 ## Temario
 
-1. Uso de el menu
+1. Formatos de el programa
 2. Pago de cuotas
 3. Prestamos
 4. Rifas
@@ -13,21 +13,7 @@
 
 ## Uso de el menu
 
-El menu esta dividido en dos partes la primera es es la parte "que es el menu?"
-en esta parte se encuentra la opcion de guardar todo en un repositorio de github
-para esto solo hay que: tener git instalado, un repositorio llamado "fondo" en 
-github y haber conectado el repositorio de github con el respositorio actual en
-el que esta guardado el proyecto es importante tener en cuenta que cada vez que
-se oprime el boton de guardado este solo hace un nuevo commit y lo guarda en 
-github. lo otro es un mensaje que explica que el menu es lo que carga todos los 
-ajustes necesarios para el programa y que este siempre debe cargar y monstrar 
-imagen de lo contrario algunas funciones de el programa no podran ser ajecutadas 
 
-La segunda parte de el menu es donde se cargan las multas para todos los usuarios
-esto es importante ya que si un usuario no pago esa semana esta funcion le carga
-la pertinente multa, y asi se evitan errores de acumulacion, en teoria esto se 
-debe resolver de una mejor manera pero eso va a ser en otra actualizacion ya que 
-en esta hay muchas falencias funcionales
 
 ## Pago de cuotas
 
