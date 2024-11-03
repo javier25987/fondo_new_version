@@ -20,7 +20,7 @@ def cargar_multas() -> None:
     bar.empty()
 
 
-def guardar_tabla() -> None:
+def hacer_commit() -> None:
     ajustes = fg.abrir_ajustes()
     with st.status("Guardando cambios ...", expanded=True) as status:
         os.chdir(ajustes["path programa"])

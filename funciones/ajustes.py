@@ -1,13 +1,11 @@
 import time
 import pandas as pd
 import streamlit as st
-import subprocess
 import datetime
-import json
-import os
 import funciones.general as fg
+import os
 
-def crear_listado_de_fechas(primera_fecha: str, *dobles) -> list:
+def crear_listado_de_fechas(primera_fecha: str, dobles: list[str]) -> str:
     fecha = fg.string_a_fecha(primera_fecha)
     dias = 7
     fechas = []
@@ -24,7 +22,5 @@ def crear_listado_de_fechas(primera_fecha: str, *dobles) -> list:
         if i not in fechas:
             return ["-"]
 
-    return fechas
+    return "_".join(fechas)
 
-def crear_ajustes_del_programa() -> None:
-    pass
