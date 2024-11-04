@@ -29,6 +29,9 @@ if "usuario_actual_ver" not in st.session_state:
 if "usuario_actual_rifas" not in st.session_state:
     st.session_state.usuario_actual_rifas = -1
 
+if "ranura_actual" not in st.session_state:
+    st.session_state.ranura_actual = "1"
+
 
 def logout() -> None:
     st.session_state.admin = False
@@ -128,7 +131,7 @@ paginas_generales: list = [
     st.Page(
         "paginas/Rifas.py",
         title="Rifas",
-        icon="💰"
+        icon="🗒️"
     ),
     st.Page(
         "paginas/VerSocios.py",

@@ -12,10 +12,8 @@ index = st.session_state.usuario_actual_cuotas
 index_de_usuario = st.sidebar.number_input(
     "Numero de usuario:", value=0, step=1
 )
-
 if st.sidebar.button("Buscar"):
     estado = fc.abrir_usuario(index_de_usuario)
-
     if estado[0]:
         st.session_state.usuario_actual_cuotas = index_de_usuario
         st.rerun()
@@ -45,7 +43,9 @@ else:
     with col1_2:
         if st.button("Estado de cuenta"):
             with st.spinner("Obteniendo estado de cuenta..."):
-                pass
+                fc.obtener_estado_de_cuenta(index)
+                os.system("notepad.exe text/estado_de_cuenta.txt")
+
     st.divider()
 
     df1, df2 = fc.tablas_para_cuotas_y_multas(index)
@@ -76,7 +76,6 @@ else:
         "Tesorero:",
         ("1", "2", "3", "4")
     )
-
     col3_1, col3_2 = st.columns(2)
 
     if col3_1.button("Iniciar proceso de pago"):
@@ -93,22 +92,6 @@ else:
                 multas_a_pagar,
                 tesorero_a_pagar
             )
-            # fc.crear_nuevo_cheque(
-            #     nombre=nombre_usuario,
-            #     numero=index,
-            #     multas_pagadas=multas_a_pagar,
-            #     valor_multa=st.session_state.valor_de_la_multa,
-            #     cuotas_pagadas=cuotas_a_pagar,
-            #     valor_cuota=st.session_state.valor_de_la_cuota,
-            #     puestos=df["puestos"][index],
-            #     tesorero=tesorero_a_pagar
-            # )
     if col3_2.button("Abrir ultimo cheque"):
         with st.spinner("Abriendo cheque..."):
             os.system("notepad.exe text/cheque_de_cuotas.txt")
-
-
-
-
-
-

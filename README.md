@@ -1,27 +1,20 @@
 # Proyecto fondo san javier
 
-## Temario
+## Anotaciones
 
-1. Formatos de el programa
-2. Pago de cuotas
-3. Prestamos
-4. Rifas
-5. Ver socios
-6. Modificar
-7. Ajustes
-8. Errores de el programa
+> En el fondo hay una gerarquia de simbolos para separar los elementos de un string
+la gerarquia es la siguiente ``` _ >> # >> ? ```
 
-## Uso de el menu
+> El simbolo ```/``` se reserva unicamente para las fechas y para nada mas
 
+> En el apartedo de prestamos el orden de la informacion es el siguiente ```interes_"intereses vencidos"_revisiones_deuda_fiadores_"deuda con fiadores"``` 
 
-
-## Pago de cuotas
-
-
+## Deuda tecnica
+* hay que completar la funcion "obtener_estado_de_cuenta" (funciones/cuotas.py)
 
 ## Errores de el programa
 
-Esto no es una excusa pero cuando inicie este proyecto no sabia muy bien como 
+Esto no es una excusa pero cuando inicie este proyecto no sabia muy bien como
 hacerlo ahora mi conociento es mas amplio y puedo decir que tengo la capacidad
 pero hay muchas cosas y muchas funciones principalmente que han de ser refactorizadas
 ya que en el momento en el que fueron hechas no habia un pleno conocimiento de
@@ -30,9 +23,11 @@ arquitectura de programa ya que actualmente el programa cuenta con muchos parche
 internos y una terrible arquitectura ya que todo fue hecho sobre el momento. Esto
 no quiere decir que el programa no sea funcional y que este es completamente funcional
 pero a pesar de todo esto hay muchas cosas que se pueden mejorar para ampliar la
-eficiencia de el programa.
+eficiencia de el programa. por eso inicie esta version la cual tiene todo eso mejorado
+y mejores funciones dentro de si
 
-## Agradecimiento 
+## Agradecimiento
+
 Este proyecto fue hecho para mi padre al cual le agradezo todo lo que me ha dado
 y la educacion que me esta pagando ya que gracias a eso obtuve los conocimientos
 para realizar este proyecto,
