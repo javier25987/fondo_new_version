@@ -13,22 +13,14 @@ index_de_usuario: int = st.sidebar.number_input(
     "Numero de usuario: ",
     value=0, step=1
 )
-
 if st.sidebar.button("Buscar"):
-    if 0 <= index_de_usuario < ajustes["usuarios"]:
-        if df["estado"][index_de_usuario] == "activo":
-            st.session_state.usuario_actual_prestamos = index_de_usuario
-            st.rerun()
-        else:
-            st.error(
-                f"El usuario № {index_de_usuario} no esta activo.",
-                icon="🚨"
-            )
+    estado = fp.abrir_usuario(index_de_usuario, ajustes, df)
+
+    if estado[0]:
+        st.session_state.usuario_actual_prestamos = index_de_usuario
+        st.rerun()
     else:
-        st.error(
-            "El numero de usuario esta fuera de rango.",
-            icon="🚨"
-        )
+        st.error(estado[1], icon="🚨")
 
 if index == -1:
     st.title("Usuario indeterminado")
@@ -86,3 +78,31 @@ else:
         st.subheader("Ranuras disponibles: ")
         st.table(fp.ranuras_disponibles(index, df))
 
+        st.subheader("Carta de solicitud: ")
+        if st.button("Hacer carta"):
+            pass
+
+    with tab3:
+        capital: list = fp.consultar_capital_disponible(
+            index, ajustes, df
+        )
+        st.subheader("Capital")
+        st.write(f"capital guardado: {capital[1]}")
+        st.write(
+            f"Capital disponible para retirar: {capital[2]}"
+        )
+
+        st.subheader("Deudas")
+
+        st.write(f"Deudas por fiador: {capital[3]}.")
+        st.write(f"Fiador de: {df["fiador de"][index]}")
+
+        st.write("Deudas en prestamos:")
+        st.table(capital[4])
+
+        st.write("Deudas por intereses vencidos:")
+        st.table(capital[5])
+
+        st.header(
+            f"Dinero disponible para retirar: {capital[0]}"
+        )

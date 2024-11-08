@@ -6,8 +6,18 @@ import datetime
 import json
 import os
 
+def abrir_usuario(index: int, ajustes: dict, df) -> (bool, str):
+    if 0 <= index < ajustes["usuarios"]:
+        if df["estado"][index] == "activo":
+            return True, ""
+        else:
+            return False, f"El usuario № {index} no esta activo",
+    else:
+        return False, "El numero de usuario esta fuera de rango"
+
 def crear_tablas_de_ranura(prestamo: str, fechas: str):
     prestamo: list[str] = prestamo.split("_")
+    deudas = int(prestamo[3]) + int(prestamo[1])
     return pd.DataFrame(
         {
             "Deuda": list("{:,}".format(int(prestamo[3]))),
@@ -20,7 +30,7 @@ def crear_tablas_de_ranura(prestamo: str, fechas: str):
         {
             "Fechas": fechas.split("_")
         }
-    ), True if prestamo[3] == "0" else False
+    ), True if deudas == 0 else False
 
 
 def ranuras_disponibles(index: int, df):
@@ -62,3 +72,91 @@ def activar_ranura(index: int, df, ajustes: dict, ranura: str) -> None:
             icon="ℹ️"
         )
 
+
+def consultar_capital_disponible(index: int, ajustes: dict, df) -> tuple:
+    capital: int = int(df["capital"][index])
+    capital_disponible: int = int(capital*ajustes["capital usable"]/100)
+
+    deudas_por_fiador: int = int(df["deudas por fiador"][index])
+
+    deudas_en_prestamos_tabla: dict = {
+        "Ranuras": [],
+        "Deudas": []
+    }
+    deudas_en_prestamos: int = 0
+
+    deudas_por_intereses_tabla: dict = {
+        "Ranuras": [],
+        "Deudas": []
+    }
+    deudas_por_intereses: int = 0
+
+    for i in range(1, 16):
+        if df[f"p{i} estado"][index] != "activo":
+            prestamo: list[str] = df[f"p{i} prestamo"][index].split("_")
+
+            deuda_prestamo: int = int(prestamo[3])
+            if deuda_prestamo > 0:
+                deudas_en_prestamos_tabla["Ranuras"].append(f"Ranura {i}")
+                deudas_en_prestamos_tabla["Deudas"].append(
+                    "{:,}".format(deuda_prestamo)
+                )
+                deudas_en_prestamos += deuda_prestamo
+
+            deuda_intereses: int = int(prestamo[1])
+            if deuda_intereses > 0:
+                deudas_por_intereses_tabla["Ranuras"].append(f"Ranura {i}")
+                deudas_por_intereses_tabla["Deudas"].append(
+                    "{:,}".format(deuda_intereses)
+                )
+                deudas_por_intereses += deuda_intereses
+
+    deudas_en_prestamos_tabla["Ranuras"].append("TOTAL:")
+    deudas_en_prestamos_tabla["Deudas"].append(
+        "{:,}".format(deudas_en_prestamos)
+    )
+
+    deudas_por_intereses_tabla["Ranuras"].append("TOTAL:")
+    deudas_por_intereses_tabla["Deudas"].append(
+        "{:,}".format(deudas_por_intereses)
+    )
+
+    capital_total: int = capital_disponible - (
+        deudas_por_fiador + deudas_en_prestamos + deudas_por_intereses
+    )
+
+    return (
+        "{:,}".format(capital_total), # 0
+        "{:,}".format(capital),  # 1
+        "{:,}".format(capital_disponible),  # 2
+        "{:,}".format(deudas_por_fiador),  # 3
+        pd.DataFrame(deudas_en_prestamos_tabla),  # 4
+        pd.DataFrame(deudas_por_intereses_tabla)  # 5
+    )
+
+
+def consultar_capital_usuario(index: int, ajustes: dict, df) -> int:
+    capital: int = int(df["capital"][index])
+    capital_disponible: int = int(capital*ajustes["capital usable"]/100)
+
+    deudas_por_fiador: int = int(df["deudas por fiador"][index])
+
+    deudas_en_prestamos: int = 0
+    deudas_por_intereses: int = 0
+
+    for i in range(1, 16):
+        if df[f"p{i} estado"][index] != "activo":
+            prestamo: list[str] = df[f"p{i} prestamo"][index].split("_")
+
+            deuda_prestamo: int = int(prestamo[3])
+            if deuda_prestamo > 0:
+                deudas_en_prestamos += deuda_prestamo
+
+            deuda_intereses: int = int(prestamo[1])
+            if deuda_intereses > 0:
+                deudas_por_intereses += deuda_intereses
+
+    capital_total: int = capital_disponible - (
+        deudas_por_fiador + deudas_en_prestamos + deudas_por_intereses
+    )
+    return capital_total

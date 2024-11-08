@@ -3,7 +3,7 @@
 =    FONDO SAN JAVIER     =
 =                         =
 ===========================
-> Nombre:Mario Perez
+> Nombre:Wiliam Avila
 > Numero:0
 > Puestos:10
 ===========================
@@ -18,6 +18,6 @@
 > Tesorero:1
 > Total pagado:100,000
 ===========================
-> Fecha:2024.11.03
-> Hora:15:54
+> Fecha:2024.11.08
+> Hora:15:50
 ===========================

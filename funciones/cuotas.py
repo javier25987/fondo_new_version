@@ -1,7 +1,6 @@
 import pandas as pd
 import streamlit as st
 import datetime
-import funciones.general as fg
 
 
 def sumar_una_multa(s: list, semana: int = 0) -> list:
@@ -15,10 +14,7 @@ def sumar_una_multa(s: list, semana: int = 0) -> list:
     return s
 
 
-def arreglar_asuntos(index: int) -> None:
-    ajustes: dict = fg.abrir_ajustes()
-    df = pd.read_csv(ajustes["nombre df"])
-
+def arreglar_asuntos(index: int, ajustes: dict, df) -> None:
     cuotas: list = list(df["cuotas"][index])
     multas: list = list(df["multas"][index])
 
@@ -124,13 +120,10 @@ def pagar_n_multas(s: str, n: int):
     return "".join(s)
 
 
-def abrir_usuario(index: int) -> (bool, str, int):
-    ajustes: dict = fg.abrir_ajustes()
-    df = pd.read_csv(ajustes["nombre df"])
-
+def abrir_usuario(index: int, ajustes: dict, df) -> (bool, str):
     if 0 <= index < ajustes["usuarios"]:
         if df["estado"][index] == "activo":
-            arreglar_asuntos(index=index)
+            arreglar_asuntos(index, ajustes, df)
 
             df = pd.read_csv(ajustes["nombre df"])
 
@@ -140,13 +133,13 @@ def abrir_usuario(index: int) -> (bool, str, int):
                 df.loc[index, "estado"] = "no activo"
                 df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
                 df.to_csv(st.session_state.nombre_df)
-                return False, "El usuario ha sido desactivado."
+                return False, "El usuario ha sido desactivado"
             else:
                 return True, ""
         else:
-            return False, f"El usuario № {index} no esta activo."
+            return False, f"El usuario № {index} no esta activo"
     else:
-        return False, "El numero de usuario esta fuera de rango."
+        return False, "El numero de usuario esta fuera de rango"
 
 
 def r_cuotas(s: str) -> str:
@@ -159,9 +152,7 @@ def r_cuotas(s: str) -> str:
             return " "
 
 
-def tablas_para_cuotas_y_multas(index: int):
-    ajustes: dict = fg.abrir_ajustes()
-    df = pd.read_csv(ajustes["nombre df"])
+def tablas_para_cuotas_y_multas(index: int, ajustes: dict, df):
 
     funct = lambda x: " " if x == "n" else x
 
@@ -290,13 +281,13 @@ def crear_nuevo_cheque(
 
 @st.dialog("Formulario de pago")
 def formulario_de_pago(
-    index: int,
-    cuotas: int,
-    multas: int,
-    tesorero: str
+        index: int,
+        cuotas: int,
+        multas: int,
+        tesorero: str,
+        ajustes: dict,
+        df
 ) -> None:
-    ajustes: dict = fg.abrir_ajustes()
-    df = pd.read_csv(ajustes["nombre df"])
 
     st.header(f"№ {index} - {df["nombre"][index].title()}")
     st.divider()
@@ -357,7 +348,7 @@ def formulario_de_pago(
         df.loc[index, "multas"] = multas_actual
         df.loc[index, "tesorero"] = tesorero_actual
         df.loc[index, "capital"] = capital_actual
-        df.loc[index, "aporte_a_multas"] = multas_aportes_actual
+        df.loc[index, "aporte a multas"] = multas_aportes_actual
 
         crear_nuevo_cheque(
             df["nombre"][index].title(),
@@ -376,10 +367,7 @@ def formulario_de_pago(
         st.rerun()
 
 
-def obtener_estado_de_cuenta(index: int):
-    ajustes: dict = fg.abrir_ajustes()
-    df = pd.read_csv(ajustes["nombre df"])
-
+def obtener_estado_de_cuenta(index: int, df):
     ahora = datetime.datetime.now().strftime("%Y/%m/%d %H:%M")
 
     formato = [

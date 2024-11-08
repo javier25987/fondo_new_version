@@ -6,6 +6,10 @@ import funciones.general as fg
 import os
 
 def crear_listado_de_fechas(primera_fecha: str, dobles: list[str]) -> str:
+    """
+    para este formato es obligatorio que las fechas esten en el formato
+    anio/mes/dia/hora (la hora tiene que estar en formato 24 horas)
+    """
     fecha = fg.string_a_fecha(primera_fecha)
     dias = 7
     fechas = []
@@ -20,7 +24,7 @@ def crear_listado_de_fechas(primera_fecha: str, dobles: list[str]) -> str:
 
     for i in dobles:
         if i not in fechas:
-            return ["-"]
+            return "n"
 
     return "_".join(fechas)
 

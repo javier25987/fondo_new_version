@@ -24,9 +24,10 @@ def crear_ajustes_de_el_programa() -> None:
     ajustes: dict = {
         "valor multa": 3000,
         "valor cuota": 10000,
-        "interes < tope": 30,
-        "interes > tope": 20,
+        "interes < tope": 3,
+        "interes > tope": 2,
         "tope de intereses": 20000000,
+        "capital usable": 50,
         "clave de acceso": "1234",
         "calendario": "n",
         "usuarios": 0,
