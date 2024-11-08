@@ -160,3 +160,46 @@ def consultar_capital_usuario(index: int, ajustes: dict, df) -> int:
         deudas_por_fiador + deudas_en_prestamos + deudas_por_intereses
     )
     return capital_total
+
+
+def hacer_carta_de_prestamo() -> None:
+    ahora: datetime = datetime.datetime.now()
+    fecha_hora_str: str = ahora.strftime("%Y/%m/%d %H:%M")
+    carta: list[str] = [
+        fecha_hora_str + "\n",
+        "\n",
+        "Señores de el fondo, yo __________________________ usuari@ № _______ de el fondo San Javier\n",
+        "\n",
+        "solicito un prestamo por el valor de _______________, con el interes de ______ % tengo la \n",
+        "\n",
+        "intencion de pagar el prestamo en _______ mes(es) si mi dinero no llegase a ser suficiente\n",
+        "\n",
+        "solicito como fiador(es) con las siguientes deudas a:\n",
+        "\n",
+        "          Nombre                    Numero                    Deuda\n",
+        "-------------------------------------------------------------------------------------\n",
+        "                              |                 |\n",
+        "-------------------------------------------------------------------------------------\n",
+        "                              |                 |\n",
+        "-------------------------------------------------------------------------------------\n",
+        "                              |                 |\n",
+        "-------------------------------------------------------------------------------------\n",
+        "                              |                 |\n",
+        "-------------------------------------------------------------------------------------\n",
+        "                              |                 |\n",
+        "-------------------------------------------------------------------------------------\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "          _________________________                         _________________________\n",
+        "           socio de el fondo                                 tesorero"
+    ]
+
+    with open("text/carta_prestamo.txt", "w", encoding="utf-8") as f:
+        f.write("".join(carta))
+        f.close()

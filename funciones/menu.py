@@ -9,14 +9,14 @@ import time
 
 def cargar_multas() -> None:
     ajustes = fg.abrir_ajustes()
-    df = pd.DataFrame(ajustes["nombre df"])
+    df = pd.read_csv(ajustes["nombre df"])
     total_usuarios = ajustes["usuarios"]
     mensaje = "Cargando multas a todos los usuarios ..."
     bar = st.progress(0, mensaje)
 
     for i in range(total_usuarios):
         fc.arreglar_asuntos(i, ajustes, df)
-        df = pd.DataFrame(ajustes["nombre df"])
+        df = pd.read_csv(ajustes["nombre df"])
         bar.progress((i + 1) / total_usuarios, mensaje)
 
     time.sleep(1)

@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import funciones.general as fg
 import funciones.prestamos as fp
@@ -78,10 +79,68 @@ else:
     with tab2:
         st.subheader("Ranuras disponibles: ")
         st.table(fp.ranuras_disponibles(index, df))
+        st.divider()
 
         st.subheader("Carta de solicitud: ")
         if st.button("Hacer carta"):
-            pass
+            with st.spinner("Abriendo carta"):
+                fp.hacer_carta_de_prestamo()
+                os.system("notepad.exe text/carta_prestamo.txt")
+        st.divider()
+
+        st.subheader("Formato de solicitud: ")
+        col2_1, col2_2 = st.columns(2)
+
+        with col2_1:
+            ranura_prestamo: str = st.selectbox(
+                "Ranura en la que guardar el prestamo: ",
+                [
+                    str(i) for i in range(1, 16)
+                ]
+            )
+            valor_prestamo: int = st.number_input(
+                "Valor de el prestamo: ",
+                value=0, step=1
+            )
+
+        with col2_2:
+            numero_de_fiadores: int = st.number_input(
+                "Cantidad de fiadores: ",
+                value=0, step=1
+            )
+
+            col3_1, col3_2 = st.columns(2)
+            key_f: int = 0
+            key_d: int = 0
+
+            for i in range(numero_de_fiadores):
+                with col3_1:
+                    st.number_input(
+                        "Numero de el fiador: ",
+                        value=0, step=1,
+                        key=f"numero_fiador_{key_f}"
+                    )
+                    key_f += 1
+                with col3_2:
+                    st.number_input(
+                        "Deuda con el fiador: ",
+                        value=0, step=1,
+                        key=f"deuda_fiador_{key_d}"
+                    )
+                    key_d += 1
+
+        if st.button("Realizar prestamo"):
+            fiadores: list[int] = []
+            deudas: list[int] = []
+            for i in range(numero_de_fiadores):
+                fiadores.append(
+                    st.session_state[f"numero_fiador_{i}"]
+                )
+                deudas.append(
+                    st.session_state[f"deuda_fiador_{i}"]
+                )
+            print(fiadores)
+            print(deudas)
 
     with tab3:
         capital: list = fp.consultar_capital_disponible(
