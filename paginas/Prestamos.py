@@ -43,7 +43,7 @@ else:
             [str(i) for i in range(1, 16)]
         )
 
-        if col1_2.button("Abrir Ranura"):
+        if col1_2.button("Abrir ranura"):
             st.session_state.ranura_actual = ranura_escojida
             st.rerun()
 
@@ -73,6 +73,7 @@ else:
                     )
         else:
             st.text("aca va el formato de pago")
+            # no olvida hacer el formato de pago aca
 
     with tab2:
         st.subheader("Ranuras disponibles: ")

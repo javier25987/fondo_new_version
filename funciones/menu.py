@@ -1,3 +1,4 @@
+import pandas as pd
 import streamlit as st
 import os
 import funciones.general as fg
@@ -8,12 +9,14 @@ import time
 
 def cargar_multas() -> None:
     ajustes = fg.abrir_ajustes()
+    df = pd.DataFrame(ajustes["nombre df"])
     total_usuarios = ajustes["usuarios"]
     mensaje = "Cargando multas a todos los usuarios ..."
     bar = st.progress(0, mensaje)
 
     for i in range(total_usuarios):
-        fc.arreglar_asuntos(i)
+        fc.arreglar_asuntos(i, ajustes, df)
+        df = pd.DataFrame(ajustes["nombre df"])
         bar.progress((i + 1) / total_usuarios, mensaje)
 
     time.sleep(1)
@@ -27,6 +30,9 @@ def hacer_commit() -> None:
 
         st.write("Subiendo archivos ...")
         fg.ejecutar_comando_git(["git", "add", "."])
+
+        st.write("Guardando ajustes ...")
+        fg.ejecutar_comando_git(["git", "add", "ajustes.json"])
 
         st.write("Guardando cambios ...")
         ahora = datetime.datetime.now()
@@ -47,5 +53,3 @@ def hacer_commit() -> None:
         )
         time.sleep(1)
         st.rerun()
-
-
