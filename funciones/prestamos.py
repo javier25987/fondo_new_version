@@ -5,6 +5,9 @@ import subprocess
 import datetime
 import json
 import os
+import funciones.general as fg
+from dateutil.relativedelta import relativedelta
+
 
 def abrir_usuario(index: int, ajustes: dict, df) -> (bool, str):
     if 0 <= index < ajustes["usuarios"]:
@@ -20,15 +23,18 @@ def crear_tablas_de_ranura(prestamo: str, fechas: str):
     deudas = int(prestamo[3]) + int(prestamo[1])
     return pd.DataFrame(
         {
-            "Deuda": list("{:,}".format(int(prestamo[3]))),
+            "Deuda": ["{:,}".format(int(prestamo[3]))],
             "Interes": [f"{int(prestamo[0])/100} %"],
-            "Intereses Vencidos": list("{:,}".format(int(prestamo[1]))),
-            "Fiadores": [prestamo[4]],
-            "Deuda Con fiadores": [prestamo[5]]
+            "Intereses Vencidos": ["{:,}".format(int(prestamo[1]))],
         }
     ), pd.DataFrame(
         {
             "Fechas": fechas.split("_")
+        }
+    ), pd.DataFrame(
+        {
+            "Fiadores": prestamo[4].split("#"),
+            "Deuda Con fiadores": prestamo[5].split("#")
         }
     ), True if deudas == 0 else False
 
@@ -203,3 +209,225 @@ def hacer_carta_de_prestamo() -> None:
     with open("text/carta_prestamo.txt", "w", encoding="utf-8") as f:
         f.write("".join(carta))
         f.close()
+
+
+def rectificar_viavilidad(
+        index: int,
+        ranura: str,
+        valor: int,
+        ajustes: dict,
+        df,
+        fiadores: list[int] = list,
+        deudas_con_fiadores: list[int] = list
+) -> (bool, str):
+    if df[f"p{ranura} estado"][index] != "activo":
+        return (
+            False,
+            f"La ranura {ranura} no esta activa"
+        )
+    if index in fiadores:
+        return (
+            False,
+            "Un usuario no puede ser su propio fiador"
+        )
+    if len(fiadores) != len(set(fiadores)):
+        return (
+            False,
+            "No se permiten fiadores repetidos"
+        )
+
+    capital_disponible: int = consultar_capital_usuario(
+        index, ajustes, df
+    )
+    if valor == 0:
+        return (
+            False,
+            "Para que hacer un prestamo?"
+        )
+    if valor - sum(deudas_con_fiadores) > capital_disponible:
+        return (
+            False,
+            "El dinero de el usuario no alcanza para el prestamo"
+        )
+    if sum(deudas_con_fiadores) > valor:
+        return (
+            False,
+            "La deuda con fiadores supera el valor de el prestamo"
+        )
+    if sum(deudas_con_fiadores) + capital_disponible < valor:
+        return (
+            False,
+            "No alcanza para solitar el prestamo, solicite mas fiadores"
+        )
+
+    count: int = 0
+    for i in fiadores:
+        capital_de_fiador: int = consultar_capital_usuario(
+            i, ajustes, df
+        )
+        if capital_de_fiador < deudas_con_fiadores[count]:
+            return (
+                False,
+                f"El fiador con puesto №{i} no cuenta con el dinero"
+            )
+        if df["estado"][i] != "activo":
+            return (
+                False,
+                f"El fiador con puesto №{i} no esta activo"
+            )
+        count += 1
+
+    return True, ""
+
+
+def calendario_de_meses(fecha_de_cierre: str) -> str:
+    fecha_de_cierre: datetime = datetime.datetime(
+        *map(
+            int,
+            fecha_de_cierre.split('/')
+        )
+    )
+
+    ahora: datetime = datetime.datetime.now()
+    fechas: list = []
+
+    dias_memoria: int = ahora.day
+    while True:
+        dias_uso: int = dias_memoria
+        while True:
+            try:
+                temporal_ahora: datetime = datetime.datetime(
+                    ahora.year + (ahora.month + 1 > 12),
+                    ahora.month % 12 + 1,
+                    dias_uso
+                )
+                ahora = temporal_ahora
+                break
+            except:
+                dias_uso -= 1
+
+        if ahora < fecha_de_cierre:
+            fechas.append(
+                ahora.strftime('%Y/%m/%d')
+            )
+        else:
+            break
+
+    return "_".join(fechas)
+
+
+def escribir_prestamo(
+        index: int,
+        ranura: str,
+        valor: int,
+        ajustes: dict,
+        df,
+        fiadores: list[int] = list,
+        deudas_fiadores: list[int] = list
+) -> None:
+    interes: int = ajustes["interes < tope"]
+
+    if valor > ajustes["tope de intereses"]:
+        interes = ajustes["interes > tope"]
+
+    info_general: str = "_".join(
+        (
+            str(interes),
+            "0", "0",
+            str(valor),
+            "#".join(
+                map(str, fiadores)
+            ) if fiadores else "n",
+            "#".join(
+                map(str, deudas_fiadores)
+            ) if deudas_fiadores else "n"
+        )
+    )
+
+    count: int = 0
+    for i in fiadores:
+        deudas_de_el_fiador: int = int(df["deudas por fiador"][i])
+        deudas_de_el_fiador += deudas_fiadores[count]
+        df.loc[i, "deudas por fiador"] = deudas_de_el_fiador
+
+        fiador_de: str = df["fiador de"][i]
+        if fiador_de == "n":
+            fiador_de = str(index)
+        else:
+            fiador_de += f"_{index}"
+        df.loc[i, "fiador de"] = fiador_de
+
+        count += 1
+
+    prestamos_hechos: int = int(df["prestamos hechos"][index])
+    prestamos_hechos += 1
+    df.loc[index, "prestamos hechos"] = prestamos_hechos
+
+    dinero_en_prestamos: int = int(df["dinero en prestamos"][index])
+    dinero_en_prestamos += valor
+    df.loc[index, "dinero en prestamos"] = dinero_en_prestamos
+
+    dinero_por_si: int = int(df["dinero por si mismo"][index])
+    dinero_por_si += (valor - sum(fiadores))
+    df.loc[index, "dinero por si mismo"] = dinero_por_si
+
+    df.loc[index, f"p{ranura} estado"] = "no activo"
+    df.loc[index, f"p{ranura} prestamo"] = info_general
+    df.loc[index, f"p{ranura} fechas de pago"] = calendario_de_meses(
+        ajustes["fecha de cierre"]
+    )
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+
+    df.to_csv(ajustes["nombre df"])
+
+
+@st.dialog("Formulario de prestamo")
+def formulario_de_prestamo(
+        index: int,
+        ranura: str,
+        valor: int,
+        ajustes: dict,
+        df,
+        fiadores: list[int] = list,
+        deudas_fiadores: list[int] = list
+) -> None:
+    st.header(
+        f"№ {index}: {df["nombre"][index].title()}"
+    )
+    st.divider()
+
+    st.subheader(f"Valor de el prestamo: {valor:,}")
+    st.subheader(f"Guardar en la ranura: {ranura}")
+
+    st.table(
+        pd.DataFrame(
+            {
+                "Fiadores": fiadores,
+                "Deudas con fiadores": list(
+                    map(
+                        lambda x: "{:,}".format(x),
+                        deudas_fiadores
+                    )
+                )
+            }
+        )
+    )
+    st.divider()
+
+    if st.button("Realizar prestamo", key="BotonNoSe"):
+        escribir_prestamo(
+            index,
+            ranura,
+            valor,
+            ajustes,
+            df,
+            fiadores,
+            deudas_fiadores
+        )
+        st.rerun()
+
+
+
+
+
+

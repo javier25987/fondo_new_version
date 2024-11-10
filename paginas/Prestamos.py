@@ -4,6 +4,8 @@ import funciones.general as fg
 import funciones.prestamos as fp
 import pandas as pd
 
+from funciones.prestamos import formulario_de_prestamo
+
 ranura_actual: str = st.session_state.ranura_actual
 
 ajustes: dict = fg.abrir_ajustes()
@@ -56,12 +58,13 @@ else:
         )
 
         st.header(f"Ranura abierta: {ranura_actual}")
-        st.subheader("Informacion de el prestamo")
+        st.subheader("Informacion de el prestamo: ")
         st.table(tablas_ranura[0])
-        st.subheader("Fechas de pago")
+        st.table(tablas_ranura[2])
+        st.subheader("Fechas de pago: ")
         st.table(tablas_ranura[1])
 
-        if tablas_ranura[2]:
+        if tablas_ranura[3]:
             if df[f"p{ranura_actual} estado"][index] == "activo":
                 st.markdown("> **NOTA:** La ranura esta activa")
             else:
@@ -130,17 +133,31 @@ else:
                     key_d += 1
 
         if st.button("Realizar prestamo"):
-            fiadores: list[int] = []
-            deudas: list[int] = []
+            fiadores_prestamo: list[int] = []
+            deudas_prestamo: list[int] = []
             for i in range(numero_de_fiadores):
-                fiadores.append(
+                fiadores_prestamo.append(
                     st.session_state[f"numero_fiador_{i}"]
                 )
-                deudas.append(
+                deudas_prestamo.append(
                     st.session_state[f"deuda_fiador_{i}"]
                 )
-            print(fiadores)
-            print(deudas)
+            estado_prestamo: tuple[bool, str] = fp.rectificar_viavilidad(
+                index, ranura_prestamo, valor_prestamo,
+                ajustes, df, fiadores_prestamo,
+                deudas_prestamo
+            )
+            if estado_prestamo[0]:
+                st.balloons()
+                formulario_de_prestamo(
+                    index, ranura_prestamo, valor_prestamo,
+                    ajustes, df, fiadores_prestamo,
+                    deudas_prestamo
+                )
+            else:
+                st.error(
+                    estado_prestamo[1], icon="🚨"
+                )
 
     with tab3:
         capital: list = fp.consultar_capital_disponible(
