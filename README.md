@@ -11,6 +11,8 @@ la gerarquia es la siguiente ``` _ >> # >> ? ```
 
 ## Deuda tecnica
 * hay que completar la funcion "obtener_estado_de_cuenta" (funciones/cuotas.py)
+* formato de pago y anotaciones de prestamos (paginas/Prestamos.py)
+* apartado de rifas (administrador/Ajustes.py)
 
 ## Errores de el programa
 

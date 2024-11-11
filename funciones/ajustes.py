@@ -1,9 +1,7 @@
-import time
-import pandas as pd
+import funciones.general as fg
 import streamlit as st
 import datetime
-import funciones.general as fg
-import os
+import time
 
 def crear_listado_de_fechas(primera_fecha: str, dobles: list[str]) -> str:
     """
@@ -13,9 +11,8 @@ def crear_listado_de_fechas(primera_fecha: str, dobles: list[str]) -> str:
     fecha = fg.string_a_fecha(primera_fecha)
     dias = 7
     fechas = []
-    n_semanas = 50 - len(dobles)
 
-    for i in range(0, n_semanas):
+    for i in range(48):
         new_f = fecha + datetime.timedelta(days=dias * i)
         f_new = new_f.strftime("%Y/%m/%d/%H")
         if f_new in dobles:
@@ -28,3 +25,8 @@ def crear_listado_de_fechas(primera_fecha: str, dobles: list[str]) -> str:
 
     return "_".join(fechas)
 
+def guardar_y_avisar(ajustes: dict):
+    fg.guardar_ajustes(ajustes)
+    st.success("Valor modificado", icon="✅")
+    time.sleep(1)
+    st.rerun()

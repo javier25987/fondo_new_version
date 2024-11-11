@@ -1,12 +1,6 @@
-import time
 import pandas as pd
 import streamlit as st
-import subprocess
 import datetime
-import json
-import os
-import funciones.general as fg
-from dateutil.relativedelta import relativedelta
 
 
 def abrir_usuario(index: int, ajustes: dict, df) -> (bool, str):
@@ -18,13 +12,14 @@ def abrir_usuario(index: int, ajustes: dict, df) -> (bool, str):
     else:
         return False, "El numero de usuario esta fuera de rango"
 
+
 def crear_tablas_de_ranura(prestamo: str, fechas: str):
     prestamo: list[str] = prestamo.split("_")
     deudas = int(prestamo[3]) + int(prestamo[1])
     return pd.DataFrame(
         {
             "Deuda": ["{:,}".format(int(prestamo[3]))],
-            "Interes": [f"{int(prestamo[0])/100} %"],
+            "Interes": [f"{prestamo[0]} %"],
             "Intereses Vencidos": ["{:,}".format(int(prestamo[1]))],
         }
     ), pd.DataFrame(
@@ -287,7 +282,6 @@ def calendario_de_meses(fecha_de_cierre: str) -> str:
             fecha_de_cierre.split('/')
         )
     )
-
     ahora: datetime = datetime.datetime.now()
     fechas: list = []
 
@@ -343,7 +337,6 @@ def escribir_prestamo(
             ) if deudas_fiadores else "n"
         )
     )
-
     count: int = 0
     for i in fiadores:
         deudas_de_el_fiador: int = int(df["deudas por fiador"][i])
