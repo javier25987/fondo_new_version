@@ -1,7 +1,8 @@
-import streamlit as st
 import funciones.general as fg
-import json
+import streamlit as st
 import pandas as pd
+import json
+import time
 
 st.set_page_config(layout="wide")
 
@@ -45,11 +46,11 @@ def login() -> None:
 
     st.markdown(
         """
-        Por favor ingrese su clave de administrador para acceder
-        a las funciones extra de el programa.
+        Por favor ingrese su contraseña de administrador para acceder
+        a las funciones extra de el programa
         """
     )
-    clave: str = st.text_input("Clave de administrador:")
+    clave: str = st.text_input("Contraseña de administrador:")
 
     if st.button("Ingresar"):
         if clave == ajustes["clave de acceso"]:
@@ -58,37 +59,24 @@ def login() -> None:
                 icon="🎉"
             )
             st.session_state.admin = True
+            time.sleep(1)
             st.rerun()
         elif clave == "":
             st.error(
-                "La clave esta vacia",
+                "La contraseña esta vacia",
                 icon="🚨"
             )
         else:
             st.error(
-                "La clave es incorrecta",
+                "La contraseña es incorrecta",
                 icon="🚨"
             )
 
 
 def crear_archivos_elementales() -> None:
     st.header("Creacion de archivos de ajustes y almacenamiento.")
-
-    df_mensaje: str = ""
-    ajustes_mensaje: str = ""
-
-    if not st.session_state.df_exist:
-        df_mensaje = "* Tabla de socios"
-
-    if not st.session_state.ajustes_exist:
-        ajustes_mensaje = "* Ajustes de el programa"
-
     st.markdown(
         f"""
-        #### Se necesita crear:
-        {ajustes_mensaje}
-        {df_mensaje}
-        
         > **NOTA:** En caso de necesitarse crear el archivo de ajustes y la tabla
         de socios cree primero el archivo de ajustes y despues la tabla
         ese orden es el adecuado para la operacion.
@@ -98,18 +86,28 @@ def crear_archivos_elementales() -> None:
         de el archivo.
         """
     )
+    if st.session_state.df_exist or st.session_state.ajustes_exist:
+        if not st.session_state.ajustes_exist:
+            if st.button("crear ajustes de el programa"):
+                fg.crear_ajustes_de_el_programa()
+                st.rerun()
 
-    col1, col2 = st.columns(2)
+        if not st.session_state.df_exist:
+            if st.button("Crear nueva tabla de usuarios"):
+                fg.crear_tabla_principal()
+                st.rerun()
+    else:
+        col1, col2 = st.columns(2)
 
-    with col1:
-        if st.button("crear ajustes de el programa"):
-            fg.crear_ajustes_de_el_programa()
-            st.rerun()
+        with col1:
+            if st.button("crear ajustes de el programa"):
+                fg.crear_ajustes_de_el_programa()
+                st.rerun()
 
-    with col2:
-        if st.button("Crear nueva tabla de socios"):
-            fg.crear_tabla_principal()
-            st.rerun()
+        with col2:
+            if st.button("Crear nueva tabla de usuarios"):
+                fg.crear_tabla_principal()
+                st.rerun()
 
 
 paginas_generales: list = [

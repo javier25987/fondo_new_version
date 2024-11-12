@@ -43,7 +43,7 @@ else:
         col1_1, col1_2 = st.columns(2, vertical_alignment="bottom")
         ranura_escojida: str = col1_1.selectbox(
             "Ranura a abrir:",
-            [str(i) for i in range(1, 16)]
+            [str(i) for i in range(1, 17)]
         )
 
         if col1_2.button("Abrir ranura"):

@@ -1,3 +1,4 @@
+from datetime import datetime
 import funciones.ajustes as fa
 import funciones.general as fg
 import streamlit as st
@@ -15,22 +16,22 @@ tab = list(
         ]
     )
 )
-key = 1
+key: int = 1
 
 ajustes:dict = fg.abrir_ajustes()
 
 with tab[0]:
     st.header("Calendario:")
 
-    calendario = ajustes["calendario"]
+    calendario: str = ajustes["calendario"]
 
     if calendario == "n":
         st.error("No hay un calendario", icon="🚨")
         st.subheader("Crear calendario:")
     else:
-        calendario = calendario.split("_")
-        hora_de_corte = calendario[1][-2:]
-        calendario = list(
+        calendario: list[str] = calendario.split("_")
+        hora_de_corte: str = calendario[1][-2:]
+        calendario: list[str] = list(
             map(
                 lambda x: x[:-3],
                 calendario
@@ -58,17 +59,20 @@ with tab[0]:
         n_hora = st.number_input("Hora de cierre: ", value=19, step=1)
 
     with col0[1]:
-        n_fecha_inicial = st.date_input("Fecha inicial: ")
+        n_fecha_inicial: datetime = st.date_input("Fecha inicial: ")
     with col0[2]:
-        n_fecha_doble_1 = st.date_input("Primera fecha doble: ")
+        n_fecha_doble_1: datetime = st.date_input("Primera fecha doble: ")
     with col0[3]:
-        n_fecha_doble_2 = st.date_input("Segunda fecha doble: ")
+        n_fecha_doble_2: datetime = st.date_input("Segunda fecha doble: ")
 
     if st.button("Crear calendario", key=f"key: {key}"):
-        n_hora = str(n_hora)
-        n_fecha_inicial = n_fecha_inicial.strftime("%Y/%m/%d") + "/" + n_hora
-        n_fecha_doble_1 = n_fecha_doble_1.strftime("%Y/%m/%d") + "/" + n_hora
-        n_fecha_doble_2 = n_fecha_doble_2.strftime("%Y/%m/%d") + "/" + n_hora
+        n_hora: str = str(n_hora)
+        n_fecha_inicial: str = n_fecha_inicial.strftime("%Y/%m/%d") \
+            + "/" + n_hora
+        n_fecha_doble_1: str = n_fecha_doble_1.strftime("%Y/%m/%d") \
+            + "/" + n_hora
+        n_fecha_doble_2: str = n_fecha_doble_2.strftime("%Y/%m/%d") \
+            + "/" + n_hora
 
         if n_fecha_doble_1 == n_fecha_doble_2:
             st.error("Las fechas dobles no pueden coincidir", icon="🚨")
@@ -125,12 +129,12 @@ with tab[2]:
     col2 = st.columns(2)
 
     with col2[0]:
-        st.subheader("Clave de acceso actual: ")
+        st.subheader("Contraseña actual: ")
 
-        st.markdown(f"#### > *{ajustes["clave de acceso"]}*")
+        st.caption(f"# {ajustes["clave de acceso"]}")
 
     with col2[1]:
-        nueva_clave = st.text_input("Nueva clave de acceso:")
+        nueva_clave = st.text_input("Nueva contraseña:")
 
         if st.button("Modificar", key=f"key: {key}"):
             ajustes["clave de acceso"] = nueva_clave
@@ -156,7 +160,7 @@ with tab[3]:
         )
 
     with col3_1[1]:
-        nuevo_tope = st.number_input(
+        nuevo_tope: int = st.number_input(
             "Nuevo tope:",
             value=20000000, step=1
         )
@@ -183,7 +187,7 @@ with tab[3]:
             f"{ajustes["interes < tope"]} %"
         )
     with col3_2[1]:
-        nuevo_interes_m_tope = st.number_input(
+        nuevo_interes_m_tope: int = st.number_input(
             "Nuevo interes menor a el tope:",
             value=3, step=1
         )
@@ -202,7 +206,7 @@ with tab[3]:
             f"{ajustes["interes > tope"]} %"
         )
     with col3_3[1]:
-        nuevo_interes_M_tope = st.number_input(
+        nuevo_interes_M_tope: int = st.number_input(
             "Nuevo interes mayor a el tope:",
             value=2, step=1
         )
@@ -212,7 +216,7 @@ with tab[3]:
         key += 1
 
 with tab[4]:
-    st.header("Usuarios")
+    st.header("Usuarios:")
 
     col4_1 = st.columns(2)
 
@@ -224,7 +228,7 @@ with tab[4]:
             f"[ {ajustes["usuarios"]} ] usuarios"
         )
     with col4_1[1]:
-        nuevo_usuarios = st.number_input(
+        nuevo_usuarios: int = st.number_input(
             "Nuevo numero de usuarios:",
             value=0, step=1
         )
@@ -272,7 +276,7 @@ with tab[5]:
         )
 
     with col5[1]:
-        n_fecha = st.date_input("Nueva fecha de cierre:")
+        n_fecha: datetime = st.date_input("Nueva fecha de cierre:")
 
         if st.button("Modificar", key=f"key: {key}"):
             ajustes["fecha de cierre"] = n_fecha.strftime("%Y/%m/%d")
@@ -296,7 +300,7 @@ with tab[6]:
             f"Tabla de trabajo actual: {ajustes["nombre df"]}"
         )
     with col6_1[1]:
-        n_nombre_tabla = st.text_input("Nuevo nombre:")
+        n_nombre_tabla: str = st.text_input("Nuevo nombre:")
 
         if st.button("Modificar", key=f"key: {key}"):
             ajustes["nombre df"] = n_nombre_tabla
@@ -312,7 +316,7 @@ with tab[6]:
             f"{ajustes["numero de creacion"]}"
         )
     with col6_2[1]:
-        n_numero_gen = st.number_input(
+        n_numero_gen: int = st.number_input(
             "Nuevo numero de generacion:",
             value=0, step=1
         )
@@ -342,7 +346,7 @@ with tab[7]:
         st.write(f"Enlace actual: {ajustes["enlace repo"]}")
 
     with col7_2[1]:
-        n_enlace = st.text_input("Nuevo enlace:")
+        n_enlace: str = st.text_input("Nuevo enlace:")
 
         if st.button("Modificar", key=f"key: {key}"):
             ajustes["enlace repo"] = n_enlace
@@ -357,7 +361,7 @@ with tab[7]:
         st.write(f"Commits realizados: {ajustes["commits hechos"]}")
 
     with col7_3[1]:
-        n_comits = st.number_input(
+        n_comits: int = st.number_input(
             "Nuevos commits:",
             value=0, step=1
         )
@@ -367,3 +371,110 @@ with tab[7]:
             fa.guardar_y_avisar(ajustes)
         key += 1
 
+with tab[8]:
+    n_rifas = ("1", "2", "3", "4")
+    st.header("Ver rifas:")
+    tab_8 = st.tabs(
+        [
+            "Rifa 1", "Rifa 2", "Rifa 3", "Rifa 4"
+        ]
+    )
+    count: int = 0
+    for i in n_rifas:
+        with tab_8[count]:
+            for j in fa.crear_tablas_rifas(ajustes, i):
+                st.table(j)
+        count += 1
+
+    st.divider()
+    st.header("Modificar rifas:")
+
+    col8_1 = st.columns(3)
+
+    with col8_1[0]:
+        r_numero_de_boletas: int = st.number_input(
+            "Numero de boletas:",
+            step=1, value=0
+        )
+        r_costo_de_boleta: int = st.number_input(
+            "Costo por boleta:",
+            value=0, step=1
+        )
+
+    with col8_1[1]:
+        r_numeros_por_boleta: int = st.number_input(
+            "Numeros por boleta:",
+            step=1, value=0
+        )
+        r_costos_de_administracion: int = st.number_input(
+            "Costos de administracion:",
+            step=1, value=0
+        )
+
+    with col8_1[2]:
+        r_boletas_por_talonario: int = st.number_input(
+            "Boletas por talonario:",
+            value=0, step=1
+        )
+        r_fecha_de_cierre = st.date_input("Fecha de cierre:")
+
+    for i in range(1, r_numeros_por_boleta+1):
+        with col8_1[(i-1)%3]:
+            st.number_input(
+                f"Premio № {i}:",
+                value=0, step=1,
+                key=f"premio: {i}"
+            )
+
+    col8_2 = st.columns(2, vertical_alignment="bottom")
+
+    with col8_2[0]:
+        st.divider()
+        r_rifa = st.selectbox(
+            "Rifa que desea modificar:",
+            n_rifas
+        )
+
+    with col8_2[1]:
+        if st.button("Modificar rifa"):
+            premios: list[int] = []
+            for i in range(1, r_numeros_por_boleta + 1):
+                premios.append(
+                    st.session_state[f"premio: {i}"]
+                )
+            fa.cargar_datos_de_rifa(
+                ajustes,
+                r_rifa,
+                r_numero_de_boletas,
+                r_numeros_por_boleta,
+                r_boletas_por_talonario,
+                r_costo_de_boleta,
+                r_costos_de_administracion,
+                r_fecha_de_cierre,
+                premios
+            )
+    st.divider()
+    st.header("(Des)Activar rifas:")
+
+    for i, j in zip(st.columns(4), n_rifas):
+        with i:
+            st.subheader(f"Rifa {j}:")
+            if ajustes[f"r{j} estado"]:
+                st.write(f"La rifa {j} esta activa")
+            else:
+                st.write(f"La rifa {j} NO esta activa")
+
+            if st.button("Modificar", key=f"key: {key}"):
+                ajustes[f"r{j} estado"] = not ajustes[f"r{j} estado"]
+                fa.guardar_y_avisar(ajustes)
+            key += 1
+
+    st.divider()
+    st.header("Cerrar rifas:")
+
+    for i, j in zip(st.columns(4), n_rifas):
+        with i:
+            st.subheader(f"Rifa {j}:")
+            if st.button("Cerrar rifa", key=f"key: {key}"):
+                fa.cerrar_una_rifa(j)
+            key += 1

@@ -7,12 +7,12 @@ la gerarquia es la siguiente ``` _ >> # >> ? ```
 
 > El simbolo ```/``` se reserva unicamente para las fechas y para nada mas
 
-> En el apartedo de prestamos el orden de la informacion es el siguiente ```interes_"intereses vencidos"_revisiones_deuda_fiadores_"deuda con fiadores"``` 
+> En el apartado de prestamos el orden de la informacion es el siguiente ```interes_"intereses vencidos"_revisiones_deuda_fiadores_"deuda con fiadores"``` 
 
 ## Deuda tecnica
 * hay que completar la funcion "obtener_estado_de_cuenta" (funciones/cuotas.py)
 * formato de pago y anotaciones de prestamos (paginas/Prestamos.py)
-* apartado de rifas (administrador/Ajustes.py)
+* funcion cerrar rifa (funciones/rifas.py)
 
 ## Errores de el programa
 

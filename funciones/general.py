@@ -168,6 +168,9 @@ def crear_tabla_principal() -> None:
                 "p15 estado": [],
                 "p15 prestamo": [],
                 "p15 fechas de pago": [],
+                "p16 estado": [],
+                "p16 prestamo": [],
+                "p16 fechas de pago": [],
                 "deudas por fiador": [],
                 "fiador de": [],
                 "anotaciones de prestamos": []
@@ -206,14 +209,6 @@ def ejecutar_comando_git(comando):
         print(f"Error: {error.decode("utf-8")}")
     else:
         print(f"Salida: {salida.decode("utf-8")}")
-
-
-
-
-if __name__ == "__main__":
-    print(
-        string_a_fecha("2024/10/5/7")
-    )
 
 
 

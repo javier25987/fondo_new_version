@@ -95,6 +95,9 @@ def insertar_socios(
             "p15 estado": ["activo"],
             "p15 prestamo": ["0_0_0_0_n_n"],
             "p15 fechas de pago": ["n"],
+            "p16 estado": ["activo"],
+            "p16 prestamo": ["0_0_0_0_n_n"],
+            "p16 fechas de pago": ["n"],
             "deudas por fiador": [0],
             "fiador de": ["n"],
             "anotaciones de prestamos": ["n"]
