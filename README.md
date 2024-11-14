@@ -13,6 +13,7 @@ la gerarquia es la siguiente ``` _ >> # >> ? ```
 * hay que completar la funcion "obtener_estado_de_cuenta" (funciones/cuotas.py)
 * formato de pago y anotaciones de prestamos (paginas/Prestamos.py)
 * funcion cerrar rifa (funciones/rifas.py)
+* formularios para modificar un elemento en la tabla (administrador/ModificarSocios.py)
 
 ## Errores de el programa
 
