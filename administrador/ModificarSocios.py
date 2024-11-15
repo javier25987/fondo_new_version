@@ -3,13 +3,13 @@ import funciones.general as fg
 import streamlit as st
 import pandas as pd
 
-st.title("Modificar Socios")
+st.title("Modificar Usuarios")
 
 ajustes: dict = fg.abrir_ajustes()
 df = pd.read_csv(ajustes["nombre df"])
 
 tabs = st.tabs(
-    ["Ver y modificar datos", "Añadir usuario"]
+    ["Ver datos","Modificar datos", "Añadir usuario"]
 )
 
 with tabs[0]:
@@ -19,8 +19,8 @@ with tabs[0]:
         datos: str = st.selectbox(
             "Datos que desea ver:",
             (
-                "informacion general", "pago de cuotas",
-                "rifas", "prestamos", "TODO"
+                "TODO", "informacion general",
+                "pago de cuotas", "rifas", "prestamos"
             )
         )
     with col1[1]:
@@ -106,6 +106,9 @@ with tabs[0]:
             st.table(df)
 
 with tabs[1]:
+    pass
+
+with tabs[2]:
     st.header("Datos de el nuevo usuario:")
 
     nombre: str = st.text_input("Nombre:")

@@ -16,14 +16,15 @@ index_de_usuario = st.sidebar.number_input(
 if st.sidebar.button("Buscar", key="00011"):
     pass
 
-tab_1, tab_2, tab_3, tab_4, tab_5, tab_6 = st.tabs(
+tabs = st.tabs(
     [
-        "Anotaciones", "Buscar socios", "Ver si necesita acuerdo",
-        "Buscar boleta", "Tabla de socios", "Archivo de ajustes"
+        "Buscar Usuarios", "Anotaciones", "Ver si necesita acuerdo",
+        "Verificar ranura 16", "Buscar boleta", "Tabla de Usuarios",
+        "Archivo de ajustes"
     ]
 )
 
-with tab_1:
+with tabs[1]:
     if index == -1:
         st.title("Usuario indeterminado")
     else:
@@ -82,7 +83,7 @@ with tab_1:
             st.write(i)
             st.divider()
 
-with tab_2:
+with tabs[0]:
     c_1, c_2 = st.columns(2, vertical_alignment="bottom")
 
     with c_1:
@@ -116,7 +117,7 @@ with tab_2:
             ]
         )
 
-with tab_3:
+with tabs[2]:
     tabla_acuerdo = df[df["dinero por si mismo"] < df["capital"]//2]
     st.info(
         """
@@ -133,7 +134,10 @@ with tab_3:
         ]
     )
 
-with tab_4:
+with tabs[3]:
+    pass
+
+with tabs[4]:
     rifa_a_buscar = st.selectbox(
         "Seleccione la rifa en la que desea buscar.",
         (
@@ -158,9 +162,9 @@ with tab_4:
         ]
     )
 
-with tab_5:
+with tabs[5]:
     st.table(df)
 
-with tab_6:
+with tabs[6]:
     ajustes["clave de acceso"] = "********"
     st.json(ajustes)
