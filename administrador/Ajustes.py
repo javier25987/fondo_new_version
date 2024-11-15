@@ -1,9 +1,10 @@
-from datetime import datetime
 import funciones.ajustes as fa
 import funciones.general as fg
 import streamlit as st
 import pandas as pd
 import os
+
+from datetime import datetime
 
 st.title("Ajustes")
 
@@ -82,6 +83,13 @@ with tab[0]:
                 [n_fecha_doble_1, n_fecha_doble_2]
             )
             fa.guardar_y_avisar(ajustes)
+    key += 1
+
+    st.divider()
+
+    if st.button("Eliminar calendario", key=f"key: {key}"):
+        ajustes["calendario"] = "n"
+        fa.guardar_y_avisar(ajustes)
     key += 1
 
 with tab[1]:
@@ -318,7 +326,7 @@ with tab[6]:
     with col6_2[1]:
         n_numero_gen: int = st.number_input(
             "Nuevo numero de generacion:",
-            value=0, step=1
+            value=1, step=1
         )
         if st.button("Modificar", key=f"key: {key}"):
             ajustes["numero de creacion"] = n_numero_gen

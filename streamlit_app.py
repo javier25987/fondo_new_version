@@ -133,7 +133,7 @@ paginas_generales: list = [
     ),
     st.Page(
         "paginas/VerSocios.py",
-    title = "Ver Socios",
+    title = "Ver Usuarios",
     icon = "🔎"
     )
 ]
@@ -141,7 +141,7 @@ paginas_generales: list = [
 paginas_de_adiministrador: list = [
     st.Page(
         "administrador/ModificarSocios.py",
-        title="Modificar Socios",
+        title="Modificar Usuarios",
         icon="📖",
     ),
     st.Page(

@@ -33,9 +33,10 @@ else:
         df["puestos"][index]} puesto(s)"
     )
 
-    tab1, tab2, tab3 = st.tabs(
+    tab1, tab2, tab3, tab4 = st.tabs(
         [
-            "Prestamos", "Solicitar Prestamo", "Consultar Capital"
+            "Prestamos", "Solicitar Prestamo", "Consultar Capital",
+            "Anotaciones"
         ]
     )
 
@@ -183,3 +184,68 @@ else:
         st.header(
             f"Dinero disponible para retirar: {capital[0]}"
         )
+
+    with tab4:
+        st.subheader("Realizar una anotacion:")
+        anotacion: str = st.text_input("Nueva anotacion:")
+
+        if st.button("Realizar anotacion"):
+            estado_anotacion: (bool, str) = fp.realizar_anotacion(
+                index, anotacion, ajustes, df
+            )
+            if estado_anotacion[0]:
+                st.rerun()
+            else:
+                st.error(estado_anotacion[1], icon="🚨")
+
+        st.divider()
+        st.subheader("Anotaciones hechas:")
+
+        anotaciones: str = df["anotaciones de prestamos"][index].split("_")
+
+        count: int = 0
+        numero_de_anotaciones: list[int] = []
+        for i in anotaciones:
+            st.markdown(f"> **№ {count}:** {i}")
+            numero_de_anotaciones.append(count)
+            count += 1
+
+        st.divider()
+
+        st.subheader("Modificar anotaciones:")
+        new_anotacion: str = st.text_input(
+            "Nueva anotacion modificada:"
+        )
+        cols_a_1 = st.columns(2, vertical_alignment="bottom")
+
+        with cols_a_1[0]:
+            pos_mod_anotacion: int = st.selectbox(
+                "Anotacion que desea modificar:",
+                numero_de_anotaciones
+            )
+        with cols_a_1[1]:
+            if st.button("Modificar"):
+                fp.modificar_anotacion(
+                    index, pos_mod_anotacion,
+                    new_anotacion,
+                    ajustes, df
+                )
+                st.rerun()
+
+        st.divider()
+        st.subheader("Eliminar anotaciones:")
+
+        cols_a_2 = st.columns(2, vertical_alignment="bottom")
+
+        with cols_a_2[0]:
+            pos_eli_anotacion: int = st.selectbox(
+                "Anotacion que desea eliminar:",
+                numero_de_anotaciones
+            )
+        with cols_a_2[1]:
+            if st.button("Eliminar"):
+                fp.eliminar_anotacion(
+                    index, pos_eli_anotacion,
+                    ajustes, df
+                )
+                st.rerun()

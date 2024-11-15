@@ -1,5 +1,5 @@
-import pandas as pd
 import streamlit as st
+import pandas as pd
 import datetime
 
 
@@ -403,3 +403,60 @@ def obtener_estado_de_cuenta(index: int, df):
     with open("text/estado_de_cuenta.txt", "w", encoding="utf-8") as f:
         f.write("".join(formato))
         f.close()
+
+
+def realizar_anotacion(
+    index: int, anotacion: str, ajustes: dict, df
+) -> tuple[bool, str]:
+    anotaciones: str = df["anotaciones de cuotas"][index]
+
+    if "_" in anotacion:
+        return False, "El simbolo '_' no puede estar en la anotacion"
+    elif anotacion == "":
+        return False, "La anotacion esta vacia"
+    else:
+        if anotaciones == "n":
+            anotaciones = anotacion
+        else:
+            anotacion = "_" + anotacion
+            anotaciones += anotacion
+
+        df.loc[index, f"anotaciones de cuotas"] = anotaciones
+
+        df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+        df.to_csv(ajustes["nombre df"])
+
+        return True, ""
+
+
+def eliminar_anotacion(index: int, pos: int, ajustes: dict, df):
+    anotaciones: str = df["anotaciones de cuotas"][index]
+    anotaciones: list[str] = anotaciones.split("_")
+
+    if len(anotaciones) == 1:
+        anotaciones = "n"
+    else:
+        anotaciones.pop(pos)
+        anotaciones = "_".join(anotaciones)
+
+    df.loc[index, f"anotaciones de cuotas"] = anotaciones
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+    df.to_csv(ajustes["nombre df"])
+
+
+def modificar_anotacion(
+        index: int, pos: int, new_elem: str, ajustes: dict, df
+):
+    anotaciones: str = df["anotaciones de cuotas"][index]
+    anotaciones: list[str] = anotaciones.split("_")
+
+    if new_elem == "":
+        anotaciones[pos] = "n"
+    else:
+        anotaciones[pos] = new_elem
+
+    anotaciones = "_".join(anotaciones)
+
+    df.loc[index, f"anotaciones de cuotas"] = anotaciones
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+    df.to_csv(ajustes["nombre df"])

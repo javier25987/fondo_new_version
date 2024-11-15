@@ -1,7 +1,7 @@
-import time
-import pandas as pd
-import streamlit as st
 import funciones.general as fg
+import streamlit as st
+import pandas as pd
+import time
 
 
 def insertar_socios(

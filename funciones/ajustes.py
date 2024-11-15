@@ -1,7 +1,6 @@
-import pandas as pd
-
 import funciones.general as fg
 import streamlit as st
+import pandas as pd
 import datetime
 import time
 
