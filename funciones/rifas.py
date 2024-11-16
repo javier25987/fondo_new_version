@@ -163,6 +163,12 @@ def modificar_anotacion(
 
     if new_elem == "":
         anotaciones[pos] = "n"
+    elif "_" in new_elem:
+        st.error(
+            "El simbolo '_' no puede estar en la anotacion",
+            icon="🚨"
+        )
+        return 0
     else:
         anotaciones[pos] = new_elem
 

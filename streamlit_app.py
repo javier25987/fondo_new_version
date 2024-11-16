@@ -33,6 +33,8 @@ if "usuario_actual_rifas" not in st.session_state:
 if "ranura_actual" not in st.session_state:
     st.session_state.ranura_actual = "1"
 
+if "nombre_para_busqueda" not in st.session_state:
+    st.session_state.nombre_para_busqueda = ""
 
 def logout() -> None:
     st.session_state.admin = False

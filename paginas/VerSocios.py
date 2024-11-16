@@ -1,5 +1,6 @@
-import streamlit as st
+import funciones.versocios as fv
 import funciones.general as fg
+import streamlit as st
 import pandas as pd
 
 ajustes: dict = fg.abrir_ajustes()
@@ -14,85 +15,103 @@ index_de_usuario = st.sidebar.number_input(
 )
 
 if st.sidebar.button("Buscar", key="00011"):
-    pass
+    estado: (bool, str) = fv.ingresar_usuario(
+        index_de_usuario, ajustes, df
+    )
+    if estado[0]:
+        st.session_state.usuario_actual_ver = index_de_usuario
+        st.rerun()
+    else:
+        st.error(estado[1], icon="🚨")
 
 tabs = st.tabs(
     [
-        "Buscar Usuarios", "Anotaciones", "Ver si necesita acuerdo",
+        "Anotaciones", "Buscar Usuarios", "Ver si necesita acuerdo",
         "Verificar ranura 16", "Buscar boleta", "Tabla de Usuarios",
         "Archivo de ajustes"
     ]
 )
-
-with tabs[1]:
+with tabs[0]:
     if index == -1:
         st.title("Usuario indeterminado")
     else:
         st.title(f"№ {index} - {df["nombre"][index].title()}")
-        st.header(
-            f"Multas extra: {"{:,}".format(df["multas_extra"][index])}"
+
+        st.subheader("Realizar una anotacion:")
+        anotacion: str = st.text_input("Nueva anotacion:")
+
+        cols_a_0 = st.columns(2, vertical_alignment="bottom")
+
+        with cols_a_0[0]:
+            monto_anotacion: int = st.number_input(
+                "Monto de la anotacion:",
+                value=0, step=1
+            )
+        with cols_a_0[1]:
+            if st.button("Realizar anotacion"):
+                estado_anotacion: (bool, str) = fv.realizar_anotacion(
+                    index, anotacion, monto_anotacion,
+                    ajustes, df
+                )
+                if estado_anotacion[0]:
+                    st.rerun()
+                else:
+                    st.error(estado_anotacion[1], icon="🚨")
+
+        st.divider()
+        st.subheader("Anotaciones hechas:")
+
+        anotaciones: str = df["anotaciones generales"][index].split("_")
+
+        count: int = 0
+        numero_de_anotaciones: list[int] = []
+        for i in anotaciones:
+            st.markdown(f"> **№ {count}:** {i}")
+            numero_de_anotaciones.append(count)
+            count += 1
+
+        st.markdown(
+            f"> ##### Total de anotaciones: {"{:,}".format(
+                df["multas extra"][index]
+            )}"
         )
         st.divider()
+        st.subheader("Modificar anotaciones:")
 
-        col_1, col_2 = st.columns(2)
-        with col_1:
-            n_anotacion = st.text_input("Nueva anotacion.")
+        new_anotacion: str = st.text_input(
+            "Nueva anotacion modificada:"
+        )
 
-        with col_2:
-            n_monto_a_multas = st.number_input(
-                "Valor de la anotacion (multa).",
-                value=0,
-                step=1
+        cols_a_1 = st.columns(2, vertical_alignment="bottom")
+
+        with cols_a_1[0]:
+            pos_mod_anotacion: int = st.selectbox(
+                "Anotacion que desea modificar:",
+                numero_de_anotaciones
             )
-
-        if st.button("Hacer nueva anotacion"):
-            if "-" in n_anotacion:
-                st.error(
-                    "El simbolo '-' no puede estar incluido en la anotacion",
-                    icon="🚨"
+        with cols_a_1[1]:
+            if st.button("Modificar"):
+                modificar: (bool, str) = fv.modificar_anotacion(
+                    index, pos_mod_anotacion,
+                    new_anotacion,
+                    ajustes, df
                 )
-            else:
-                if n_monto_a_multas < 0:
-                    simbolo_anotacion = "(menos)"
+                if not modificar[0]:
+                    st.error(modificar[1], icon="🚨")
                 else:
-                    simbolo_anotacion = ""
+                    st.rerun()
 
-                anotacion_h = df["anotaciones"][index]
-                if anotacion_h == "-":
-                    anotacion_h = (f"{n_anotacion} ~> {simbolo_anotacion}"
-                                   f"{"{:,}".format(n_monto_a_multas)}")
-                else:
-                    anotacion_h += (f"-{n_anotacion} ~> {simbolo_anotacion}"
-                                    f"{"{:,}".format(n_monto_a_multas)}")
+with tabs[1]:
+    cols = st.columns([6, 4], vertical_alignment="bottom")
 
-                df.loc[index, "anotaciones"] = anotacion_h
-
-                multas_extra = int(df["multas_extra"][index])
-                multas_extra += n_monto_a_multas
-                df.loc[index, "multas_extra"] = multas_extra
-
-                df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
-                df.to_csv(st.session_state.nombre_df)
-                st.rerun()
-
-        st.divider()
-
-        anotaciones = df["anotaciones"][index].split("-")
-
-        for i in anotaciones:
-            st.write(i)
-            st.divider()
-
-with tabs[0]:
-    c_1, c_2 = st.columns(2, vertical_alignment="bottom")
-
-    with c_1:
-        nombre_a_buscar = st.text_input("Nombre")
-
-    with c_2:
+    with cols[0]:
+        nombre_a_buscar = st.text_input(
+            "Nombre apellido o segmento a buscar:"
+        )
+    with cols[1]:
         if st.button("Buscar"):
+            st.session_state.nombre_para_busqueda = nombre_a_buscar
             st.rerun()
-
     st.divider()
 
     if st.session_state.nombre_para_busqueda == "":
@@ -105,26 +124,22 @@ with tabs[0]:
             ]
         )
     else:
-        nuevo_data_frame = df[
-            df["nombre"].str.contains(nombre_a_buscar, case=False, na=False)
+        n_df = df[
+            df["nombre"].str.contains(
+                nombre_a_buscar, case=False, na=False
+            )
         ]
         st.table(
-            nuevo_data_frame[
+            n_df[
                 [
                     "numero", "nombre", "puestos",
-                    "numero_telefonico", "estado", "capital"
+                    "numero celular", "estado", "capital"
                 ]
             ]
         )
 
 with tabs[2]:
     tabla_acuerdo = df[df["dinero por si mismo"] < df["capital"]//2]
-    st.info(
-        """
-        Los siguientes usuarios no han retirado en prestamos la mitad de su capital
-        """,
-        icon="ℹ️"
-    )
     st.table(
         tabla_acuerdo[
             [
@@ -135,17 +150,25 @@ with tabs[2]:
     )
 
 with tabs[3]:
-    pass
+    tabla_ranura = df[["numero", "nombre", "p16 estado"]]
+
+    tabla_ranura["p16 estado"] = tabla_ranura[
+        "p16 estado"
+    ].apply(
+        lambda x: "✅" if x == "activo" else "🚨"
+    )
+    st.table(tabla_ranura)
 
 with tabs[4]:
     rifa_a_buscar = st.selectbox(
-        "Seleccione la rifa en la que desea buscar.",
+        "Seleccione la rifa en la que desea buscar:",
         (
             "1", "2", "3", "4"
         )
     )
-    boleta_a_buscar = st.text_input("Selecciones la boleta que desea buscar,")
-
+    boleta_a_buscar = st.text_input(
+        "Selecciones la boleta que desea buscar:"
+    )
     if st.button("Buscar", key="00010"):
         tabla_boletas = df[
             df[f"r{rifa_a_buscar} boletas"].str.contains(

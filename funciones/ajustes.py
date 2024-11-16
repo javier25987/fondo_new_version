@@ -85,7 +85,7 @@ def crear_tablas_rifas(ajustes:dict, rifa: str) -> list:
             {
                 "Premios": str(
                     ajustes[f"r{rifa} premios"]
-                ).split("#")
+                ).split("_")
             }
         )
     ]
