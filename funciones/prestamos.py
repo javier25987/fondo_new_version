@@ -481,3 +481,6 @@ def modificar_anotacion(
     df.loc[index, f"anotaciones de prestamos"] = anotaciones
     df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
     df.to_csv(ajustes["nombre df"])
+
+def pagar_un_prestamo(index: int, ranura: str, monto ,ajustes: dict, df):
+    pass

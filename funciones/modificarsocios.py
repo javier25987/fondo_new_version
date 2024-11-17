@@ -27,7 +27,7 @@ def insertar_socios(
             "capital": [0],
             "aporte a multas": [0],
             "multas extra": [0],
-            "anotaciones generales": [0],
+            "anotaciones generales": ["n"],
             # cuotas
             "cuotas": ["n"*50],
             "multas": ["n"*50],

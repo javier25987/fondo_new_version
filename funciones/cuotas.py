@@ -325,14 +325,6 @@ def formulario_de_pago(
     st.write(f"Se paga a el tesorero: {tesorero}")
     st.divider()
 
-    st.info(
-        "Por favor asegurese de recibir el dinero y de certificar que todo este bien."
-        " puesto que una vez aceptado el pago no hay vuelta atraz y por favor oprima"
-        " el boton solo una vez.",
-        icon="ℹ️"
-    )
-    st.divider()
-
     if st.button("Aceptar pago"):
         cuotas_actual, tesorero_actual = pagar_n_cuotas_terorero(
             cuotas_actual,
