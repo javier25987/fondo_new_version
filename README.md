@@ -14,7 +14,6 @@
 * hay que completar la funcion "obtener_estado_de_cuenta" (funciones/cuotas.py)
 * formato de pago para prestamos  (paginas/Prestamos.py)
 * arreglar asuntos de prestamos (paginas/Prestamos.py)
-* funcion cerrar rifa (funciones/rifas.py)
 * algoritmo para identificar boletas repetidas (seccion de rifas)
 * formularios para modificar un elemento en la tabla (administrador/ModificarSocios.py)
 * mejorar el algoritmo para la busqueda de una boleta (paginas/VerSocios.py)

@@ -1,3 +1,4 @@
+import funciones.prestamos as fp
 import funciones.general as fg
 import streamlit as st
 import pandas as pd
@@ -11,15 +12,18 @@ def crear_listado_de_fechas(primera_fecha: str, dobles: list[str]) -> str:
     anio/mes/dia/hora (la hora tiene que estar en formato 24 horas)
     """
     fecha = fg.string_a_fecha(primera_fecha)
-    dias = 7
     fechas = []
 
-    for i in range(48):
-        new_f = fecha + datetime.timedelta(days=dias * i)
+    i: int = 0
+    while len(fechas) < 50:
+        new_f = fecha + datetime.timedelta(days=7 * i)
         f_new = new_f.strftime("%Y/%m/%d/%H")
         if f_new in dobles:
             fechas.append(f_new)
         fechas.append(f_new)
+        i += 1
+
+    print(f"fechas creadas en el sistema: {len(fechas)}")
 
     for i in dobles:
         if i not in fechas:
@@ -28,11 +32,12 @@ def crear_listado_de_fechas(primera_fecha: str, dobles: list[str]) -> str:
     return "_".join(fechas)
 
 
-def guardar_y_avisar(ajustes: dict):
+def guardar_y_avisar(ajustes: dict, rerun: bool = True):
     fg.guardar_ajustes(ajustes)
-    st.success("Valor modificado", icon="✅")
-    time.sleep(1)
-    st.rerun()
+    if rerun:
+        st.success("Valor modificado", icon="✅")
+        time.sleep(1)
+        st.rerun()
 
 
 def crear_tablas_rifas(ajustes:dict, rifa: str) -> list:
@@ -127,51 +132,53 @@ def cargar_datos_de_rifa(
     time.sleep(1)
     st.rerun()
 
-def cerrar_una_rifa(rifa: str):
-    pass
-    # with open('ajustes.json', 'r') as f:
-    #     ajustes = json.load(f)
-    #     f.close()
-    #
-    # df = pd.read_csv(st.session_state.nombre_df)
-    #
-    # if ajustes[f"r{rifa} estado"]:
-    #     fecha_de_cierre = ajustes[f"r{rifa} fecha de cierre"]
-    #     fecha_de_cierre = fecha_string_formato(fecha_de_cierre)
-    #
-    #     if fecha_de_cierre < datetime.datetime.now():
-    #         print(f"Iniciando el cierre de la rifa {rifa}")
-    #
-    #         nombre_rifa = f"r{rifa} deudas"
-    #
-    #         numeros = tuple(df["numero"])
-    #         nombres = tuple(df["nombre"])
-    #         deudas = tuple(df[nombre_rifa])
-    #
-    #         for i in range(len(nombres)):
-    #             if deudas[i] > 0:
-    #                 generar_prestamo(numeros[i], deudas[i])
-    #                 df.loc[numeros[i], nombre_rifa] = 0
-    #                 print(f"> Se ha generado un prestamo para: {nombres[i]}; \t por {deudas[i]}")
-    #
-    #         df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
-    #
-    #         df.to_csv(st.session_state.nombre_df)
-    #
-    #         ajustes[f"r{rifa} estado"] = False
-    #         with open('ajustes.json', 'w') as f:
-    #             json.dump(ajustes, f)
-    #             f.close()
-    #
-    #         print(f"El proceso ha terminado exitosamente...")
-    #         st.success('Rifa cerrada correctamente.', icon="✅")
-    #     else:
-    #         st.error(
-    #             "La rifa no puede ser cerrada antes de la fecha de cierre.",
-    #             icon="🚨"
-    #         )
-    # else:
-    #     st.error(
-    #         "La rifa no puede ser cerrada, ya que esta no esta activa.",
-    #         icon="🚨"
-    #     )
+
+def cerrar_una_rifa(rifa: str, ajustes: dict):
+    df = pd.read_csv(ajustes["nombre df"])
+
+    if ajustes[f"r{rifa} estado"]:
+        fecha_de_cierre = fg.string_a_fecha(
+            ajustes[f"r{rifa} fecha de cierre"]
+        )
+
+        if fecha_de_cierre < datetime.datetime.now():
+            numeros = tuple(df["numero"])
+            nombres = tuple(df["nombre"])
+            deudas = tuple(df[f"r{rifa} deudas"])
+
+            progres_text: str = "Rectificando deudas de usuarios ..."
+            func = lambda x: int(x*(100/len(numeros)))
+            bar = st.progress(0, text=progres_text)
+
+            for i in range(len(nombres)):
+                if deudas[i] > 0:
+                    fp.escribir_prestamo(
+                        numeros[i], "16",
+                        deudas[i], ajustes, df,
+                        [], []
+                    )
+                    df.loc[numeros[i], f"r{rifa} deudas"] = 0
+
+                    st.toast(
+                        f"💵 Se genero un prestamo por {deudas[i]:,}"
+                        f"para el usuario № {numeros[i]}"
+                    )
+                    bar.progress(func(i), text=progres_text)
+
+            bar.empty()
+            ajustes[f"r{rifa} estado"] = False
+
+            df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+            df.to_csv(ajustes["nombre df"])
+
+            guardar_y_avisar(ajustes, rerun=False)
+        else:
+            st.error(
+                "No se cumple la fecha de cierre",
+                icon="🚨"
+            )
+    else:
+        st.error(
+            "La rifa no esta activa",
+            icon="🚨"
+        )

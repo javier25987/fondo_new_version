@@ -62,35 +62,48 @@ with tab[0]:
     with col0[1]:
         n_fecha_inicial: datetime = st.date_input("Fecha inicial: ")
     with col0[2]:
-        n_fecha_doble_1: datetime = st.date_input("Primera fecha doble: ")
+        cantidad_dobles: int = st.number_input(
+            "Fechas dobles:", value=1, step=1
+        )
     with col0[3]:
-        n_fecha_doble_2: datetime = st.date_input("Segunda fecha doble: ")
+        for f in range(1, cantidad_dobles + 1):
+            st.date_input(f"Fecha doble № {f}:", key=f"fecha_{f}")
+
 
     if st.button("Crear calendario", key=f"key: {key}"):
         n_hora: str = str(n_hora)
+
         n_fecha_inicial: str = n_fecha_inicial.strftime("%Y/%m/%d") \
             + "/" + n_hora
-        n_fecha_doble_1: str = n_fecha_doble_1.strftime("%Y/%m/%d") \
-            + "/" + n_hora
-        n_fecha_doble_2: str = n_fecha_doble_2.strftime("%Y/%m/%d") \
-            + "/" + n_hora
 
-        if n_fecha_doble_1 == n_fecha_doble_2:
-            st.error("Las fechas dobles no pueden coincidir", icon="🚨")
+        fechas_dobles: list[str] = [
+            st.session_state[f"fecha_{x}"].strftime("%Y/%m/%d") +
+            "/" + n_hora
+            for x in range(1, cantidad_dobles + 1)
+        ]
+
+        if len(set(fechas_dobles)) != len(fechas_dobles):
+            st.error("Hay fechas dobles repetidas", icon="🚨")
         else:
             ajustes["calendario"] = fa.crear_listado_de_fechas(
                 n_fecha_inicial,
-                [n_fecha_doble_1, n_fecha_doble_2]
+                fechas_dobles
             )
             fa.guardar_y_avisar(ajustes)
     key += 1
 
     st.divider()
 
-    if st.button("Eliminar calendario", key=f"key: {key}"):
-        ajustes["calendario"] = "n"
-        fa.guardar_y_avisar(ajustes)
-    key += 1
+    col0_1 = st.columns(2)
+
+    with col0_1[0]:
+        st.subheader("Eliminar calendario:")
+
+    with col0_1[1]:
+        if st.button("Eliminar calendario", key=f"key: {key}"):
+            ajustes["calendario"] = "n"
+            fa.guardar_y_avisar(ajustes)
+        key += 1
 
 with tab[1]:
     st.header("Valor de la cuota por puesto y por multa:")
@@ -484,5 +497,5 @@ with tab[8]:
         with i:
             st.subheader(f"Rifa {j}:")
             if st.button("Cerrar rifa", key=f"key: {key}"):
-                fa.cerrar_una_rifa(j)
+                fa.cerrar_una_rifa(j, ajustes)
             key += 1

@@ -1,6 +1,6 @@
-import streamlit as st
 import funciones.general as fg
 import funciones.menu as fm
+import streamlit as st
 
 ajustes: dict = fg.abrir_ajustes()
 
@@ -8,9 +8,11 @@ st.title("Menu de inicio")
 
 st.markdown(
         """
-        El menu es la parte de este programa dedicada a guardar unas cuantas
-        funciones de el programa, unos cuantos tutoriales y generar en la 
-        cache todo lo necesario para la interfaz de el programa.
+        Honestamente ya no se que hace con el menu, lo voy a dejar 
+        para almacenar las funciones de guardado en internet y 
+        cargar las multas a todos ya que no se donde poner eso, pero 
+        el menu ya perdio todas las funciones que tenia en la anterior
+        version
         """
 )
 st.divider()
@@ -21,7 +23,7 @@ with col1:
     st.header("Guardar tabla")
     st.divider()
     if st.button("📤 Guardar En GitHub"):
-        fm.hacer_commit()
+        fm.hacer_commit(ajustes)
 
     st.link_button("🔗 Abrir GitHub", ajustes["enlace repo"])
 
@@ -38,4 +40,4 @@ with col2:
     )
 
     if st.button("Cargar Multas"):
-        fm.cargar_multas()
+        fm.cargar_multas(ajustes)

@@ -7,8 +7,7 @@ import time
 import os
 
 
-def cargar_multas() -> None:
-    ajustes = fg.abrir_ajustes()
+def cargar_multas(ajustes: dict) -> None:
     df = pd.read_csv(ajustes["nombre df"])
     total_usuarios = ajustes["usuarios"]
     mensaje = "Cargando multas a todos los usuarios ..."
@@ -23,8 +22,21 @@ def cargar_multas() -> None:
     bar.empty()
 
 
-def hacer_commit() -> None:
-    ajustes = fg.abrir_ajustes()
+@st.dialog("🚨  Error!!  🚨")
+def error_commit(ajustes: dict) -> None:
+    st.error(
+        """
+        Los nuevos cambios fueron guardados en el computador pero
+        no fueron guardados en internet por favor revise si el GitHub
+        esta abierto o si es la primera vez que se guardan cambios
+        que el repositorio remoto esta configurado
+        """,
+        icon="🚨"
+    )
+    st.link_button("GitHub", ajustes["enlace repo"])
+
+
+def hacer_commit(ajustes: dict) -> None:
     with st.status("Guardando cambios ...", expanded=True) as status:
         os.chdir(ajustes["path programa"])
 
@@ -40,12 +52,16 @@ def hacer_commit() -> None:
         ajustes["commits hechos"] += 1
         mensaje_de_comit = f"{ajustes["commits hechos"]}_{fecha_hora_str}"
         fg.ejecutar_comando_git(["git", "commit", "-m", mensaje_de_comit])
-        fg.guardar_ajustes(ajustes)
 
-        st.write("Guardando en GitHub ...")
-        fg.ejecutar_comando_git(
-            ["git", "push"]
-        )
+        try:
+            st.write("Guardando en GitHub ...")
+            fg.ejecutar_comando_git(
+                ["git", "push"]
+            )
+        except:
+            error_commit(ajustes)
+
+        fg.guardar_ajustes(ajustes)
         status.update(
             label="Los datos han sido cargados!",
             state="complete",
@@ -53,3 +69,4 @@ def hacer_commit() -> None:
         )
         time.sleep(1)
         st.rerun()
+

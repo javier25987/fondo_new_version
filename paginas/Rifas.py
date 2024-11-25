@@ -41,7 +41,6 @@ else:
                 with cols[0]:
                     st.header("Entregar talonarios:")
                     if st.button("Entregar talonario", key=f"key: {key}"):
-                        st.balloons()
                         fr.cargar_talonario(
                             index, j, ajustes, df
                         )

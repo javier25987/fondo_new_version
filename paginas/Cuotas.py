@@ -92,7 +92,7 @@ else:
         if col3_1.button("Iniciar proceso de pago"):
             if cuotas_a_pagar == 0 and multas_a_pagar == 0:
                 st.error(
-                    "No se que desea pagar.",
+                    "No se que desea pagar",
                     icon="🚨"
                 )
             else:

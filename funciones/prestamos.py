@@ -169,26 +169,28 @@ def hacer_carta_de_prestamo() -> None:
     carta: list[str] = [
         fecha_hora_str + "\n",
         "\n",
-        "Señores de el fondo, yo __________________________ usuari@ № _______ de el fondo San Javier\n",
+        "Señores de el fondo, yo _________________________ usuari@ № _______ de el fondo San Javier\n",
         "\n",
-        "solicito un prestamo por el valor de _______________, con el interes de ______ % tengo la \n",
+        "identificado con cedula de ciudadania № _______________ solicito un prestamo por el valor \n",
+        "\n"
+        "de _______________, con el interes de ______ %, tengo la intencion de pagar el prestamo en \n"
         "\n",
-        "intencion de pagar el prestamo en _______ mes(es) si mi dinero no llegase a ser suficiente\n",
+        "_______ mes(es), si mi dinero no llegase a ser suficiente solicito como fiador(es) a (...),\n",
         "\n",
-        "solicito como fiador(es) con las siguientes deudas a:\n",
+        "con sus respectivas deudas especificadas acontinuacion:\n",
         "\n",
-        "          Nombre                    Numero                    Deuda\n",
-        "-------------------------------------------------------------------------------------\n",
-        "                              |                 |\n",
-        "-------------------------------------------------------------------------------------\n",
-        "                              |                 |\n",
-        "-------------------------------------------------------------------------------------\n",
-        "                              |                 |\n",
-        "-------------------------------------------------------------------------------------\n",
-        "                              |                 |\n",
-        "-------------------------------------------------------------------------------------\n",
-        "                              |                 |\n",
-        "-------------------------------------------------------------------------------------\n",
+        "|     Nombre(s)      (...)  |  Numero  |     Deuda                 |\n",
+        "|---------------------------|----------|---------------------------|\n",
+        "|                           |          |                           |\n",
+        "|---------------------------|----------|---------------------------|\n",
+        "|                           |          |                           |\n",
+        "|---------------------------|----------|---------------------------|\n",
+        "|                           |          |                           |\n",
+        "|---------------------------|----------|---------------------------|\n",
+        "|                           |          |                           |\n",
+        "|---------------------------|----------|---------------------------|\n",
+        "|                           |          |                           |\n",
+        "|---------------------------|----------|---------------------------|\n",
         "\n",
         "\n",
         "\n",
@@ -198,7 +200,7 @@ def hacer_carta_de_prestamo() -> None:
         "\n",
         "\n",
         "          _________________________                         _________________________\n",
-        "           socio de el fondo                                 tesorero"
+        "           usuario de el fondo                               tesorero"
     ]
 
     with open("text/carta_prestamo.txt", "w", encoding="utf-8") as f:
