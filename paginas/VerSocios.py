@@ -92,8 +92,7 @@ with tabs[0]:
         with cols_a_1[1]:
             if st.button("Modificar"):
                 modificar: (bool, str) = fv.modificar_anotacion(
-                    index, pos_mod_anotacion,
-                    new_anotacion,
+                    index, pos_mod_anotacion, new_anotacion,
                     ajustes, df
                 )
                 if not modificar[0]:

@@ -206,14 +206,10 @@ def tablas_para_cuotas_y_multas(index: int, ajustes: dict, df):
 
 
 def crear_nuevo_cheque(
-        nombre: str = "",
-        numero: int = 0,
-        multas_pagadas: int = 0,
-        valor_multas: int = 0,
-        cuotas_pagadas: int = 0,
-        valor_cuotas: int = 0,
-        puestos: int = 0,
-        tesorero: int = 1
+        nombre: str = "", numero: int = 0,
+        multas_pagadas: int = 0, valor_multas: int = 0,
+        cuotas_pagadas: int = 0, valor_cuotas: int = 0,
+        puestos: int = 0, tesorero: int = 1
 ) -> None:
     cheque: list[str] = [
         "===========================",
@@ -281,12 +277,8 @@ def crear_nuevo_cheque(
 
 @st.dialog("Formulario de pago")
 def formulario_de_pago(
-        index: int,
-        cuotas: int,
-        multas: int,
-        tesorero: str,
-        ajustes: dict,
-        df
+        index: int, cuotas: int, multas: int,
+        tesorero: str, ajustes: dict, df
 ) -> None:
 
     st.header(f"№ {index} - {df["nombre"][index].title()}")
@@ -327,10 +319,7 @@ def formulario_de_pago(
 
     if st.button("Aceptar pago"):
         cuotas_actual, tesorero_actual = pagar_n_cuotas_terorero(
-            cuotas_actual,
-            cuotas,
-            tesorero_actual,
-            tesorero
+            cuotas_actual, cuotas, tesorero_actual, tesorero
         )
         multas_actual = pagar_n_multas(multas_actual, multas)
         capital_actual += total_cuotas
@@ -343,14 +332,9 @@ def formulario_de_pago(
         df.loc[index, "aporte a multas"] = multas_aportes_actual
 
         crear_nuevo_cheque(
-            df["nombre"][index].title(),
-            index,
-            multas,
-            ajustes["valor multa"],
-            cuotas,
-            ajustes["valor cuota"],
-            puestos,
-            tesorero
+            df["nombre"][index].title(), index, multas,
+            ajustes["valor multa"], cuotas,
+            ajustes["valor cuota"], puestos, tesorero
         )
 
         df = df.loc[:, ~df.columns.str.contains("^Unnamed")]

@@ -98,11 +98,8 @@ else:
             else:
                 st.balloons()
                 fc.formulario_de_pago(
-                    index,
-                    cuotas_a_pagar,
-                    multas_a_pagar,
-                    tesorero_a_pagar,
-                    ajustes, df
+                    index, cuotas_a_pagar, multas_a_pagar,
+                    tesorero_a_pagar, ajustes, df
                 )
         if col3_2.button("Abrir ultimo cheque"):
             with st.spinner("Abriendo cheque..."):
@@ -150,8 +147,7 @@ else:
             if st.button("Modificar"):
                 fc.modificar_anotacion(
                     index, pos_mod_anotacion,
-                    new_anotacion,
-                    ajustes, df
+                    new_anotacion, ajustes, df
                 )
                 st.rerun()
 

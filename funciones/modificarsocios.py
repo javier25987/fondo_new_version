@@ -5,11 +5,8 @@ import time
 
 
 def insertar_socios(
-        ajustes:dict,
-        df,
-        nombre: str = "",
-        puestos: int = 1,
-        numero_celular: str = ""
+        ajustes:dict, df, nombre: str = "",
+        puestos: int = 1, numero_celular: str = ""
 ):
     if numero_celular == "":
         numero_celular = "n"
@@ -112,11 +109,8 @@ def insertar_socios(
 
 @st.dialog("Añadir un nuevo usuario:")
 def menu_para_insertar_socio(
-        ajustes: dict,
-        df,
-        nombre: str = "",
-        puestos: int = 0,
-        telefono: str = ""
+        ajustes: dict, df, nombre: str = "",
+        puestos: int = 0, telefono: str = ""
 ) -> None:
     cols = st.columns([7, 3], vertical_alignment="bottom")
 
@@ -131,11 +125,7 @@ def menu_para_insertar_socio(
     with cols[1]:
         if st.button("Añadir", key="nosequeputas"):
             insertar_socios(
-                ajustes,
-                df,
-                nombre,
-                puestos,
-                telefono
+                ajustes, df, nombre, puestos, telefono
             )
             st.toast("Nuevo usuario añadido", icon="🎉")
             time.sleep(1.5)

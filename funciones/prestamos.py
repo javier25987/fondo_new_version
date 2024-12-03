@@ -209,12 +209,8 @@ def hacer_carta_de_prestamo() -> None:
 
 
 def rectificar_viavilidad(
-        index: int,
-        ranura: str,
-        valor: int,
-        ajustes: dict,
-        df,
-        fiadores: list[int] = list,
+        index: int, ranura: str, valor: int, ajustes: dict,
+        df, fiadores: list[int] = list,
         deudas_con_fiadores: list[int] = list
 ) -> (bool, str):
     if df[f"p{ranura} estado"][index] != "activo":
@@ -325,12 +321,8 @@ def calendario_de_meses(fecha_de_cierre: str) -> str:
 
 
 def escribir_prestamo(
-        index: int,
-        ranura: str,
-        valor: int,
-        ajustes: dict,
-        df,
-        fiadores: list[int] = list,
+        index: int, ranura: str, valor: int, ajustes: dict,
+        df, fiadores: list[int] = list,
         deudas_fiadores: list[int] = list
 ) -> None:
     interes: int = ajustes["interes < tope"]
@@ -390,12 +382,8 @@ def escribir_prestamo(
 
 @st.dialog("Formulario de prestamo")
 def formulario_de_prestamo(
-        index: int,
-        ranura: str,
-        valor: int,
-        ajustes: dict,
-        df,
-        fiadores: list[int] = list,
+        index: int, ranura: str, valor: int, ajustes: dict,
+        df, fiadores: list[int] = list,
         deudas_fiadores: list[int] = list
 ) -> None:
     st.header(
@@ -423,13 +411,8 @@ def formulario_de_prestamo(
 
     if st.button("Realizar prestamo", key="BotonNoSe"):
         escribir_prestamo(
-            index,
-            ranura,
-            valor,
-            ajustes,
-            df,
-            fiadores,
-            deudas_fiadores
+            index, ranura, valor, ajustes,
+            df, fiadores, deudas_fiadores
         )
         st.rerun()
 

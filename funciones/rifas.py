@@ -63,11 +63,7 @@ def cargar_talonario(index: int, rifa: str, ajustes: dict, df):
 
 @st.dialog("Pago de boletas")
 def pago_de_boletas(
-        index: int,
-        pago: int,
-        rifa: str,
-        ajustes: dict,
-        df
+        index: int, pago: int, rifa: str, ajustes: dict, df
 ):
     st.header(f"№ {df["numero"][index]}: {df["nombre"][index].title()}")
     st.divider()

@@ -1,10 +1,8 @@
-import os
-import streamlit as st
-from streamlit import subheader
-
-import funciones.general as fg
 import funciones.prestamos as fp
+import funciones.general as fg
+import streamlit as st
 import pandas as pd
+import os
 
 ranura_actual: str = st.session_state.ranura_actual
 
@@ -77,7 +75,7 @@ else:
                         ranura_actual
                     )
         else:
-            subheader("Pago de prestamo:")
+            st.subheader("Pago de prestamo:")
             col1_3 = st.columns(2, vertical_alignment="bottom")
 
             with col1_3[0]:

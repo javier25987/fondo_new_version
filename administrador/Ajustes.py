@@ -86,8 +86,7 @@ with tab[0]:
             st.error("Hay fechas dobles repetidas", icon="🚨")
         else:
             ajustes["calendario"] = fa.crear_listado_de_fechas(
-                n_fecha_inicial,
-                fechas_dobles
+                n_fecha_inicial, fechas_dobles
             )
             fa.guardar_y_avisar(ajustes)
     key += 1
@@ -464,15 +463,10 @@ with tab[8]:
                     st.session_state[f"premio: {i}"]
                 )
             fa.cargar_datos_de_rifa(
-                ajustes,
-                r_rifa,
-                r_numero_de_boletas,
-                r_numeros_por_boleta,
-                r_boletas_por_talonario,
-                r_costo_de_boleta,
-                r_costos_de_administracion,
-                r_fecha_de_cierre,
-                premios
+                ajustes, r_rifa, r_numero_de_boletas,
+                r_numeros_por_boleta, r_boletas_por_talonario,
+                r_costo_de_boleta, r_costos_de_administracion,
+                r_fecha_de_cierre, premios
             )
     st.divider()
     st.header("(Des)Activar rifas:")

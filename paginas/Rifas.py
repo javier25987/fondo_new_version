@@ -78,9 +78,7 @@ else:
                                 )
                             else:
                                 fr.pago_de_boletas(
-                                    index,
-                                    n_pago,
-                                    j,
+                                    index, n_pago, j,
                                     ajustes, df
                                 )
                     key += 1
@@ -143,8 +141,7 @@ else:
             if st.button("Modificar"):
                 fr.modificar_anotacion(
                     index, pos_mod_anotacion,
-                    new_anotacion,
-                    ajustes, df
+                    new_anotacion, ajustes, df
                 )
                 st.rerun()
 
@@ -165,6 +162,3 @@ else:
                     ajustes, df
                 )
                 st.rerun()
-
-
-
