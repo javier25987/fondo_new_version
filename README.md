@@ -12,7 +12,6 @@
 ## Deuda tecnica
 
 * hay que completar la funcion "obtener_estado_de_cuenta" (funciones/cuotas.py)
-* formato de pago para prestamos  (paginas/Prestamos.py)
 * arreglar asuntos de prestamos (paginas/Prestamos.py)
 * algoritmo para identificar boletas repetidas (seccion de rifas)
 * formularios para modificar un elemento en la tabla (administrador/ModificarSocios.py)

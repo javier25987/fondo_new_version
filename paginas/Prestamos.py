@@ -1,10 +1,10 @@
 import os
 import streamlit as st
+from streamlit import subheader
+
 import funciones.general as fg
 import funciones.prestamos as fp
 import pandas as pd
-
-from funciones.prestamos import formulario_de_prestamo
 
 ranura_actual: str = st.session_state.ranura_actual
 
@@ -77,8 +77,31 @@ else:
                         ranura_actual
                     )
         else:
-            st.text("aca va el formato de pago")
-            # no olvida hacer el formato de pago aca
+            subheader("Pago de prestamo:")
+            col1_3 = st.columns(2, vertical_alignment="bottom")
+
+            with col1_3[0]:
+                monto_a_pagar: int = st.number_input(
+                    "Monto a pagar:", value=0, step=1
+                )
+            with col1_3[1]:
+                if st.button("Pagar"):
+                    if monto_a_pagar <= 0:
+                        st.error(
+                            "Desea pagar 0 o menos?",
+                            icon="🚨"
+                        )
+                    elif monto_a_pagar > tablas_ranura[4]:
+                        st.error(
+                            "No se puede pagar mas de lo que se debe",
+                            icon="🚨"
+                        )
+                    else:
+                        fp.formato_de_abono(
+                            index, monto_a_pagar, tablas_ranura[4],
+                            ranura_actual, ajustes, df
+                        )
+            st.markdown(f"> Deuda actual: {"{:,}".format(tablas_ranura[4])}")
 
     with tab2:
         st.subheader("Ranuras disponibles: ")
@@ -134,31 +157,34 @@ else:
                     key_d += 1
 
         if st.button("Realizar prestamo"):
-            fiadores_prestamo: list[int] = []
-            deudas_prestamo: list[int] = []
-            for i in range(numero_de_fiadores):
-                fiadores_prestamo.append(
-                    st.session_state[f"numero_fiador_{i}"]
-                )
-                deudas_prestamo.append(
-                    st.session_state[f"deuda_fiador_{i}"]
-                )
-            estado_prestamo: tuple[bool, str] = fp.rectificar_viavilidad(
-                index, ranura_prestamo, valor_prestamo,
-                ajustes, df, fiadores_prestamo,
-                deudas_prestamo
-            )
-            if estado_prestamo[0]:
-                st.balloons()
-                formulario_de_prestamo(
+            if st.session_state.admin:
+                fiadores_prestamo: list[int] = []
+                deudas_prestamo: list[int] = []
+                for i in range(numero_de_fiadores):
+                    fiadores_prestamo.append(
+                        st.session_state[f"numero_fiador_{i}"]
+                    )
+                    deudas_prestamo.append(
+                        st.session_state[f"deuda_fiador_{i}"]
+                    )
+                estado_prestamo: tuple[bool, str] = fp.rectificar_viavilidad(
                     index, ranura_prestamo, valor_prestamo,
                     ajustes, df, fiadores_prestamo,
                     deudas_prestamo
                 )
+                if estado_prestamo[0]:
+                    st.balloons()
+                    fp.formulario_de_prestamo(
+                        index, ranura_prestamo, valor_prestamo,
+                        ajustes, df, fiadores_prestamo,
+                        deudas_prestamo
+                    )
+                else:
+                    st.error(
+                        estado_prestamo[1], icon="🚨"
+                    )
             else:
-                st.error(
-                    estado_prestamo[1], icon="🚨"
-                )
+                fp.advertencia()
 
     with tab3:
         capital: list = fp.consultar_capital_disponible(

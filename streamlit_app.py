@@ -36,81 +36,6 @@ if "ranura_actual" not in st.session_state:
 if "nombre_para_busqueda" not in st.session_state:
     st.session_state.nombre_para_busqueda = ""
 
-def logout() -> None:
-    st.session_state.admin = False
-    st.rerun()
-
-
-def login() -> None:
-    ajustes: dict = fg.abrir_ajustes()
-
-    st.title("Ingresar como administrador")
-
-    st.markdown(
-        """
-        Por favor ingrese su contraseña de administrador para acceder
-        a las funciones extra de el programa
-        """
-    )
-    clave: str = st.text_input("Contraseña de administrador:")
-
-    if st.button("Ingresar"):
-        if clave == ajustes["clave de acceso"]:
-            st.toast(
-                "Ha obtenido acceso de administador",
-                icon="🎉"
-            )
-            st.session_state.admin = True
-            time.sleep(1)
-            st.rerun()
-        elif clave == "":
-            st.error(
-                "La contraseña esta vacia",
-                icon="🚨"
-            )
-        else:
-            st.error(
-                "La contraseña es incorrecta",
-                icon="🚨"
-            )
-
-
-def crear_archivos_elementales() -> None:
-    st.header("Creacion de archivos de ajustes y almacenamiento.")
-    st.markdown(
-        f"""
-        > **NOTA:** En caso de necesitarse crear el archivo de ajustes y la tabla
-        de socios cree primero el archivo de ajustes y despues la tabla
-        ese orden es el adecuado para la operacion.
-        
-        > **NOTA:** En caso de haber creado el archivo de ajustes dirijase a el
-        modo administrador y a ajustes, en esa pagina configure todo lo necesario
-        de el archivo.
-        """
-    )
-    if st.session_state.df_exist or st.session_state.ajustes_exist:
-        if not st.session_state.ajustes_exist:
-            if st.button("crear ajustes de el programa"):
-                fg.crear_ajustes_de_el_programa()
-                st.rerun()
-
-        if not st.session_state.df_exist:
-            if st.button("Crear nueva tabla de usuarios"):
-                fg.crear_tabla_principal()
-                st.rerun()
-    else:
-        col1, col2 = st.columns(2)
-
-        with col1:
-            if st.button("crear ajustes de el programa"):
-                fg.crear_ajustes_de_el_programa()
-                st.rerun()
-
-        with col2:
-            if st.button("Crear nueva tabla de usuarios"):
-                fg.crear_tabla_principal()
-                st.rerun()
-
 
 paginas_generales: list = [
     st.Page(
@@ -152,7 +77,7 @@ paginas_de_adiministrador: list = [
         icon="⚙️"
     ),
     st.Page(
-        logout,
+        "session/logout.py",
         title="Salir",
         icon=":material/logout:"
     )
@@ -160,7 +85,7 @@ paginas_de_adiministrador: list = [
 
 ingresar_admin: list = [
     st.Page(
-        login,
+        "session/login.py",
         title="Ingresar",
         icon=":material/login:"
     )
@@ -168,7 +93,7 @@ ingresar_admin: list = [
 
 archivos_elementales: list = [
     st.Page(
-        crear_archivos_elementales,
+        "session/files.py",
         title="Crear Archivos",
         icon=":material/settings:"
     )

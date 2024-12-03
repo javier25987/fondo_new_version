@@ -31,7 +31,7 @@ def crear_tablas_de_ranura(prestamo: str, fechas: str):
             "Fiadores": prestamo[4].split("#"),
             "Deuda Con fiadores": prestamo[5].split("#")
         }
-    ), True if deudas == 0 else False
+    ), True if deudas == 0 else False, deudas
 
 
 def ranuras_disponibles(index: int, df):
@@ -92,7 +92,7 @@ def consultar_capital_disponible(index: int, ajustes: dict, df) -> tuple:
     }
     deudas_por_intereses: int = 0
 
-    for i in range(1, 16):
+    for i in range(1, 17):
         if df[f"p{i} estado"][index] != "activo":
             prestamo: list[str] = df[f"p{i} prestamo"][index].split("_")
 
@@ -236,26 +236,38 @@ def rectificar_viavilidad(
     capital_disponible: int = consultar_capital_usuario(
         index, ajustes, df
     )
+    sum_deudas: int = sum(deudas_con_fiadores)
     if valor == 0:
         return (
             False,
             "Para que hacer un prestamo?"
         )
-    if valor - sum(deudas_con_fiadores) > capital_disponible:
-        return (
-            False,
-            "El dinero de el usuario no alcanza para el prestamo"
-        )
-    if sum(deudas_con_fiadores) > valor:
+    if sum_deudas > valor:
         return (
             False,
             "La deuda con fiadores supera el valor de el prestamo"
         )
-    if sum(deudas_con_fiadores) + capital_disponible < valor:
-        return (
-            False,
-            "No alcanza para solitar el prestamo, solicite mas fiadores"
-        )
+
+    # rectificar para capital negativo o positivo
+
+    if capital_disponible > 0:
+        if valor - sum_deudas > capital_disponible:
+            return (
+                False,
+                "El dinero de el usuario no alcanza para el prestamo"
+            )
+        if sum_deudas + capital_disponible < valor:
+            return (
+                False,
+                "No alcanza para solitar el prestamo, solicite mas fiadores"
+            )
+    else:
+        if sum_deudas < valor:
+            return (
+                False,
+                "No alcanza para solitar el prestamo, rectifique que el"
+                "dinero de los fiadores alcance para el prestamo"
+            )
 
     count: int = 0
     for i in fiadores:
@@ -484,5 +496,94 @@ def modificar_anotacion(
     df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
     df.to_csv(ajustes["nombre df"])
 
-def pagar_un_prestamo(index: int, ranura: str, monto ,ajustes: dict, df):
-    pass
+
+def pagar_un_prestamo(
+        index: int, ranura: str, monto: int ,ajustes: dict, df
+):
+    name: str = f"p{ranura} prestamo"
+    info_prestamo: list[str] = df[name][index].split("_")
+
+    intereses: int = int(info_prestamo[1])
+    deuda: int = int(info_prestamo[3])
+
+    deuda_con_fiadores: list[int] = list(
+        map(
+            int, info_prestamo[5].split("#")
+        )
+    ) if info_prestamo[5] != "n" else ["n"]
+
+    # pago de intereses
+    if intereses > monto:
+        intereses -= monto
+        monto = 0
+    else:
+        monto -= intereses
+        intereses = 0
+
+    # pago de deuda
+    deuda -= monto
+
+    # pago a fiadores
+    if "n" not in deuda_con_fiadores:
+        for i in range(len(deuda_con_fiadores)):
+            if monto <= 0:
+                break
+
+            if deuda_con_fiadores[i] > monto:
+                deuda_con_fiadores[i] -= monto
+                monto = 0
+            else:
+                monto -= deuda_con_fiadores[i]
+                deuda_con_fiadores[i] = 0
+
+        deuda_con_fiadores = list(
+            map(
+                str, deuda_con_fiadores
+            )
+        )
+
+    info_prestamo[1] = str(intereses)
+    info_prestamo[3] = str(deuda)
+    info_prestamo[5] = "#".join(deuda_con_fiadores)
+
+    df.loc[index, name] = "_".join(info_prestamo)
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+    df.to_csv(ajustes["nombre df"])
+
+
+@st.dialog("🚨 Advertencia 🚨")
+def advertencia():
+    st.write(
+        "Tiene que ingresar como administrador para poder conceder"
+        " prestamos, de lo contrario esto no sera posible."
+    )
+    st.page_link(
+        "session/login.py",
+        label="Ingresar",
+        icon=":material/login:"
+    )
+
+
+@st.dialog("Pago de prestamo")
+def formato_de_abono(
+        index: int, monto: int, deuda: int,
+        ranura: str, ajustes: dict, df
+):
+    st.divider()
+    st.subheader("Conceptos de pago:")
+    st.table(
+        {
+            "Concepto": ["Deuda actual", "Monto a pagar"],
+            "Valor": ["{:,}".format(deuda), "{:,}".format(monto)]
+        }
+    )
+
+    st.subheader(f"Deuda despues de el pago:")
+    st.markdown(f"### *{deuda - monto :,}*")
+
+    st.divider()
+    if st.button("Pagar", key="que haces aca?"):
+        pagar_un_prestamo(
+            index, ranura, monto, ajustes, df
+        )
+        st.rerun()
