@@ -8,6 +8,8 @@ st.title("Modificar Usuarios")
 ajustes: dict = fg.abrir_ajustes()
 df = pd.read_csv(ajustes["nombre df"])
 
+key: int = 0
+
 tabs = st.tabs(
     ["Ver datos","Modificar datos", "Añadir usuario"]
 )
@@ -106,7 +108,221 @@ with tabs[0]:
             st.table(df)
 
 with tabs[1]:
-    pass
+    st.header("Modificar datos:")
+
+    col4_1 = st.columns([4, 1, 5], vertical_alignment="center")
+
+    with col4_1[0]:
+        index_modificar: int = st.number_input(
+            "Numero de el usuario que desea modificar:",
+            value=0, step=1
+        )
+        index_modificar: int = abs(index_modificar)
+        if index_modificar >= ajustes["usuarios"]:
+            st.error(
+                "El numero de usuario esta fuera de rango",
+                icon="🚨"
+            )
+            st.stop()
+
+    with col4_1[2]:
+        st.caption(f"# **{df["nombre"][index_modificar]}**")
+        st.divider()
+
+    col4_2 = st.columns(3)
+
+    with col4_2[0]:
+        seccion_modificar: str = st.selectbox(
+            "Seccion que desea modificar: ",
+            (
+                "Informacion General", "Cuotas",
+                "Rifas", "Prestamos"
+            )
+        )
+        st.divider()
+
+    with col4_2[1]:
+        match seccion_modificar:
+            case "Informacion General":
+                columna_modificar: str = st.selectbox(
+                    "Columna a modificar:",
+                    (
+                        "nombre", "puestos", "numero celular", "estado",
+                        "capital", "aporte a multas"
+                    ), key=f"key: {key}"
+                )
+                key += 1
+            case "Cuotas":
+                columna_modificar: str = st.selectbox(
+                    "Columna a modificar:",
+                    (
+                        "cuotas", "multas", "revisiones",
+                    ), key=f"key: {key}"
+                )
+                key += 1
+            case "Rifas":
+                columna_modificar: str = st.selectbox(
+                    "Columna a modificar:",
+                    (
+                        "r1 deudas", "r2 deudas", "r3 deudas",
+                        "r4 deudas"
+                    ), key=f"key: {key}"
+                )
+                key += 1
+            case "Prestamos":
+                columna_modificar: str = st.selectbox(
+                    "Columna a modificar:",
+                    (
+                        "prestamos hechos", "dinero en prestamos",
+                        "dinero por si mismo", "prestamo en ranura",
+                        "deudas por fiador", "fiador de"
+                    ), key=f"key: {key}"
+                )
+                key += 1
+            case _:
+                st.error(
+                    "Me temo que hay un error",
+                    icon="🚨"
+                )
+
+    with col4_2[2]:
+        if columna_modificar == "prestamo en ranura":
+            ranura_modificar: str = st.selectbox(
+                "Ranura que desea modificar:",
+                (map(str, range(1, 17)))
+            )
+
+    columnas_texto: list[str] = [
+        "nombre", "numero celular", "estado",
+        "fiador de",
+    ]
+
+    columnas_numeros: list[str] = [
+        "capital", "puestos", "aporte a multas", "revisiones",
+        "r1 deudas", "r2 deudas", "r3 deudas", "r4 deudas",
+        "prestamos hechos", "dinero en prestamos",
+        "dinero por si mismo", "deudas por fiador",
+    ]
+
+    columnas_especiales: list[str] = [
+        "cuotas", "multas", "prestamo en ranura"
+    ]
+
+    if columna_modificar in columnas_texto:
+        col4_3 = st.columns(2)
+
+        with col4_3[0]:
+            st.write(f"#### Valor actual de la columna '{columna_modificar}': ")
+            st.caption(f"### **{df[columna_modificar][index_modificar]}**")
+
+        with col4_3[1]:
+            nuevo_valor_texto: str = st.text_input(
+                "Nuevo valor de la columna:",
+                key=f"key: {key}"
+            )
+            key += 1
+
+            if st.button("Modificar", key=f"key: {key}"):
+                fm.modificar_columna(
+                    index_modificar, columna_modificar, nuevo_valor_texto,
+                    ajustes, df
+                )
+                st.rerun()
+            key += 1
+
+    elif columna_modificar in columnas_numeros:
+        col4_4 = st.columns(2)
+
+        with col4_4[0]:
+            st.write(
+                f"#### Valor actual de la columna '{columna_modificar}': "
+            )
+            st.caption(f"### **{df[columna_modificar][index_modificar]:,}**")
+
+        with col4_4[1]:
+            nuevo_valor_numero: str = st.number_input(
+                "Nuevo valor de la columna:",
+                value=0, step=1, key=f"key: {key}"
+            )
+            key += 1
+
+            if st.button("Modificar", key=f"key: {key}"):
+                fm.modificar_columna(
+                    index_modificar, columna_modificar, nuevo_valor_numero,
+                    ajustes, df
+                )
+                st.rerun()
+            key += 1
+
+    elif columna_modificar in columnas_especiales:
+        match columna_modificar:
+            case "multas":
+                col4_5 = st.columns(2)
+
+                with col4_5[0]:
+                    st.write(
+                        f"#### Multas que tiene el usuario: "
+                    )
+                    st.caption(
+                        f"## **{fm.contar_multas(index_modificar, df)}**"
+                    )
+
+                with col4_5[1]:
+                    usuario_multas: str = df["multas"][index_modificar]
+                    multas_modificar: int = st.number_input(
+                        "Multas que desea añadir o quitar:",
+                        value=0,
+                        step=1
+                    )
+                    col4_6 = st.columns(2)
+
+                    with col4_6[0]:
+                        if st.button("Añadir multas"):
+                            fm.modificar_columna(
+                                index_modificar, columna_modificar,
+                                fm.sumar_multas(
+                                    usuario_multas,
+                                    multas_modificar
+                                ), ajustes, df
+                            )
+                            st.rerun()
+
+                    with col4_6[1]:
+                        if st.button("Quitar multas"):
+                            fm.modificar_columna(
+                                index_modificar, columna_modificar,
+                                fm.restar_multas(
+                                    usuario_multas,
+                                    multas_modificar
+                                ), ajustes, df
+                            )
+                            st.rerun()
+
+            case "cuotas":
+                col4_7 = st.columns(2)
+
+                with col4_7[0]:
+                    pass
+
+                with col4_7[1]:
+                    pass
+
+    st.divider()
+    st.subheader("Cosas a tener en cuenta:")
+    st.markdown(
+        """
+        > No se puede eliminar la cantidad de talonarios entregados
+        y los numeros en los talonarios no pueden ser modificados, 
+        puesto que reescribir los datos por este metodo puede generar 
+        errores a futuro y lo mejor es prevenir errores.
+
+
+        > En caso de querer modificar la columna 'estado' la palabra
+        "activo" es la unica valida para denotar que el usuario esta
+        activo, para indicar lo contario el programa escribe "no activo"
+        pero puede ser cualquier cosa.
+        """
+    )
 
 with tabs[2]:
     st.header("Datos de el nuevo usuario:")

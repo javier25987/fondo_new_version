@@ -131,3 +131,68 @@ def menu_para_insertar_socio(
             time.sleep(1.5)
             st.rerun()
 
+
+def modificar_columna(
+        index: int, columna: str, nuevo: str | int,
+        ajustes: dict, df
+):
+    df.loc[index, columna] = nuevo
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+    df.to_csv(ajustes["nombre df"])
+
+
+def sumar_multas(s, n) -> str:
+    numero = lambda x: int(x) if x != "n" else 0
+    s = [numero(i) for i in s]
+
+    for i in range(50):
+        if s[i] < 9:
+            diferencia = 9 - s[i]
+            if n - diferencia > 0:
+                n -= diferencia
+                s[i] =  9
+            else:
+                s[i] += n
+                n = 0
+        if n <= 0:
+            break
+
+    return "".join(
+        map(
+            lambda x: "n" if x == 0 else str(x),
+            s
+        )
+    )
+
+
+def restar_multas(s, n) -> str:
+    numero = lambda x: int(x) if x != "n" else 0
+    s = [numero(i) for i in s]
+
+    for i in range(50):
+        if n >= s[i]:
+            n -= s[i]
+            s[i] = 0
+        else:
+            s[i] -= n
+            n = 0
+        if n <= 0:
+            break
+
+    return "".join(
+        map(
+            lambda x: "n" if x == 0 else str(x),
+            s
+        )
+    )
+
+
+def contar_multas(index: int, df):
+    count: int = 0
+
+    for i in df["multas"][index]:
+        if i != "n":
+            count += int(i)
+
+    return count
+

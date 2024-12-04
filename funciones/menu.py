@@ -27,9 +27,9 @@ def error_commit(ajustes: dict) -> None:
     st.error(
         """
         Los nuevos cambios fueron guardados en el computador pero
-        no fueron guardados en internet por favor revise si el GitHub
+        no fueron guardados en internet por favor revise si GitHub
         esta abierto o si es la primera vez que se guardan cambios
-        que el repositorio remoto esta configurado
+        que el repositorio remoto esta correctamente configurado
         """,
         icon="🚨"
     )
