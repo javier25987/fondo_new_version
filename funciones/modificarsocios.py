@@ -196,3 +196,54 @@ def contar_multas(index: int, df):
 
     return count
 
+
+def sumar_cuotas(s, n, sumar=True) -> str:
+    s = list(s)
+
+    for i in range(50):
+        if s[i] != "p":
+            s[i] = "p"
+            n -= 1
+        if n <= 0:
+            break
+
+    return "".join(s)
+
+
+def quitar_cuotas(s, n) -> str:
+    s = list(s)
+
+    for i in range(49, -1, -1):
+        if s[i] == "p":
+            s[i] = "n"
+            n -= 1
+        if n <= 0:
+            break
+
+    return "".join(s)
+
+
+def sumar_deudas(s, n) -> str:
+    s = list(s)
+
+    for i in range(50):
+        if s[i] == "n":
+            s[i] = "d"
+            n -= 1
+        if n <= 0:
+            break
+
+    return "".join(s)
+
+
+def quitar_deudas(s, n) -> str:
+    s = list(s)
+
+    for i in range(49, -1, -1):
+        if s[i] == "d":
+            s[i] = "n"
+            n -= 1
+        if n <= 0:
+            break
+
+    return "".join(s)

@@ -13,9 +13,20 @@
 
 * hay que completar la funcion "obtener_estado_de_cuenta" (funciones/cuotas.py)
 * arreglar asuntos de prestamos (paginas/Prestamos.py)
+* (opcional) incluir modificaciones a prestamos
 * algoritmo para identificar boletas repetidas (seccion de rifas)
-* formularios para modificar un elemento en la tabla (administrador/ModificarSocios.py)
 * mejorar el algoritmo para la busqueda de una boleta (paginas/VerSocios.py)
+
+## Secciones finalizadas
+
+* [X] arranque
+* [X] menu
+* [X] cuotas
+* [ ] prestamos
+* [ ] rifas
+* [ ] ver socios
+* [X] ajustes
+* [X] modificar socios
 
 ## Errores de el programa
 

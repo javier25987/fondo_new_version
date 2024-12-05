@@ -107,6 +107,47 @@ with tabs[0]:
         case "TODO":
             st.table(df)
 
+with tabs[2]:
+    st.header("Datos de el nuevo usuario:")
+
+    col5 = st.columns([6, 4])
+
+    with col5[0]:
+        nombre: str = st.text_input("Nombre:")
+        telefono: str = st.text_input("Numero celular:")
+        puestos: int = st.number_input(
+            "Numero de puestos:",
+            value=0, step=1
+        )
+        if st.button("Añadir"):
+            paso_1: bool = False
+            paso_2: bool = False
+
+            if nombre == "":
+                st.error(
+                    "El nombre de usuario no puede estar vacio",
+                    icon="🚨"
+                )
+            else:
+                paso_1 = True
+
+            if puestos < 1:
+                st.error(
+                    "Para que un usuario tendria menos de un puesto?",
+                    icon="🚨"
+                )
+            else:
+                paso_2 = True
+
+            if paso_1 and paso_2:
+                fm.menu_para_insertar_socio(
+                    ajustes, df, nombre, puestos, telefono
+                )
+                st.balloons()
+
+    with col5[1]:
+        st.table(df[["numero", "nombre", "puestos"]][::-1])
+
 with tabs[1]:
     st.header("Modificar datos:")
 
@@ -129,7 +170,7 @@ with tabs[1]:
         st.caption(f"# **{df["nombre"][index_modificar]}**")
         st.divider()
 
-    col4_2 = st.columns(3)
+    col4_2 = st.columns(2)
 
     with col4_2[0]:
         seccion_modificar: str = st.selectbox(
@@ -174,7 +215,7 @@ with tabs[1]:
                     "Columna a modificar:",
                     (
                         "prestamos hechos", "dinero en prestamos",
-                        "dinero por si mismo", "prestamo en ranura",
+                        "dinero por si mismo", # "prestamo en ranura",
                         "deudas por fiador", "fiador de"
                     ), key=f"key: {key}"
                 )
@@ -185,16 +226,15 @@ with tabs[1]:
                     icon="🚨"
                 )
 
-    with col4_2[2]:
-        if columna_modificar == "prestamo en ranura":
-            ranura_modificar: str = st.selectbox(
-                "Ranura que desea modificar:",
-                (map(str, range(1, 17)))
-            )
+    # with col4_2[2]:
+    #     if columna_modificar == "prestamo en ranura":
+    #         ranura_modificar: str = st.selectbox(
+    #             "Ranura que desea modificar:",
+    #             (map(str, range(1, 17)))
+    #         )
 
     columnas_texto: list[str] = [
-        "nombre", "numero celular", "estado",
-        "fiador de",
+        "nombre", "numero celular", "fiador de",
     ]
 
     columnas_numeros: list[str] = [
@@ -205,7 +245,7 @@ with tabs[1]:
     ]
 
     columnas_especiales: list[str] = [
-        "cuotas", "multas", "prestamo en ranura"
+        "cuotas", "multas", "estado", # "prestamo en ranura"
     ]
 
     if columna_modificar in columnas_texto:
@@ -300,12 +340,109 @@ with tabs[1]:
 
             case "cuotas":
                 col4_7 = st.columns(2)
+                usuario_cuotas: str = df["cuotas"][index_modificar]
 
                 with col4_7[0]:
-                    pass
+                    st.write(
+                        f"#### Cuotas pagas: "
+                    )
+                    st.caption(
+                        f"## **{df["cuotas"][index_modificar].count("p")}**"
+                    )
 
                 with col4_7[1]:
-                    pass
+                    cuotas_modificar: int = st.number_input(
+                        "Cuotas pagas que desea añadir o quitar:",
+                        value=0,
+                        step=1
+                    )
+                    col4_8 = st.columns(2)
+
+                    with col4_8[0]:
+                        if st.button("Añadir cuotas"):
+                            fm.modificar_columna(
+                                index_modificar, columna_modificar,
+                                fm.sumar_cuotas(
+                                    usuario_cuotas,
+                                    cuotas_modificar
+                                ), ajustes, df
+                            )
+                            st.rerun()
+
+                    with col4_8[1]:
+                        if st.button("Quitar cuotas"):
+                            fm.modificar_columna(
+                                index_modificar, columna_modificar,
+                                fm.quitar_cuotas(
+                                    usuario_cuotas,
+                                    cuotas_modificar
+                                ), ajustes, df
+                            )
+                            st.rerun()
+                    st.divider()
+
+                col4_9 = st.columns(2)
+
+                with col4_9[0]:
+                    st.write(
+                        f"#### Cuotas adeudadas: "
+                    )
+                    st.caption(
+                        f"## **{df["cuotas"][index_modificar].count("d")}**"
+                    )
+
+                with col4_9[1]:
+                    deudas_modificar: int = st.number_input(
+                        "Cuotas adeudadas que desea añadir o quitar:",
+                        value=0,
+                        step=1
+                    )
+                    col4_10 = st.columns(2)
+
+                    with col4_10[0]:
+                        if st.button("Añadir deudas"):
+                            fm.modificar_columna(
+                                index_modificar, columna_modificar,
+                                fm.sumar_deudas(
+                                    usuario_cuotas,
+                                    deudas_modificar
+                                ), ajustes, df
+                            )
+                            st.rerun()
+
+                    with col4_10[1]:
+                        if st.button("Quitar deudas"):
+                            fm.modificar_columna(
+                                index_modificar, columna_modificar,
+                                fm.quitar_deudas(
+                                    usuario_cuotas,
+                                    deudas_modificar
+                                ), ajustes, df
+                            )
+                            st.rerun()
+            case "estado":
+                col4_11 = st.columns(2, vertical_alignment="center")
+
+                with col4_11[0]:
+                    st.write(
+                        f"#### Estado actual de el usuario: "
+                    )
+                    st.caption(f"### **{df["estado"][index_modificar]}**")
+
+                with col4_11[1]:
+                    if df["estado"][index_modificar] == "activo":
+                        new_estado = "no activo"
+                        mensaje_1 = "Desactivar"
+                    else:
+                        new_estado = "activo"
+                        mensaje_1 = "Activar"
+
+                    if st.button(mensaje_1):
+                        fm.modificar_columna(
+                            index_modificar, columna_modificar,
+                            new_estado, ajustes, df
+                        )
+                        st.rerun()
 
     st.divider()
     st.subheader("Cosas a tener en cuenta:")
@@ -315,46 +452,5 @@ with tabs[1]:
         y los numeros en los talonarios no pueden ser modificados, 
         puesto que reescribir los datos por este metodo puede generar 
         errores a futuro y lo mejor es prevenir errores.
-
-
-        > En caso de querer modificar la columna 'estado' la palabra
-        "activo" es la unica valida para denotar que el usuario esta
-        activo, para indicar lo contario el programa escribe "no activo"
-        pero puede ser cualquier cosa.
         """
     )
-
-with tabs[2]:
-    st.header("Datos de el nuevo usuario:")
-
-    nombre: str = st.text_input("Nombre:")
-    telefono: str = st.text_input("Numero celular:")
-    puestos: int = st.number_input(
-        "Numero de puestos:",
-        value=0, step=1
-    )
-    if st.button("Añadir"):
-        paso_1: bool = False
-        paso_2: bool = False
-
-        if nombre == "":
-            st.error(
-                "El nombre de usuario no puede estar vacio",
-                icon="🚨"
-            )
-        else:
-            paso_1 = True
-
-        if puestos < 1:
-            st.error(
-                "Para que un usuario tendria menos de un puesto?",
-                icon="🚨"
-            )
-        else:
-            paso_2 = True
-
-        if paso_1 and paso_2:
-            fm.menu_para_insertar_socio(
-                ajustes, df, nombre, puestos, telefono
-            )
-            st.balloons()
