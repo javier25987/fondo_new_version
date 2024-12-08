@@ -1,3 +1,4 @@
+import funciones.general as fg
 import streamlit as st
 import pandas as pd
 import datetime
@@ -570,3 +571,62 @@ def formato_de_abono(
             index, ranura, monto, ajustes, df
         )
         st.rerun()
+
+
+def arreglar_asuntos(
+        index: int, ajustes: dict, df
+) -> None:
+
+    ranuras: list[str] = list(
+        map(str, range(1, 17))
+    )
+
+    guardar: bool = False
+
+    for i in ranuras:
+        if df[f"p{i} estado"][index] != "activo":
+
+            prestamo: list[str] = df[f"p{i} prestamo"][index]\
+                .split("_")
+            fechas: str = df[f"p{i} fechas de pago"][index]
+
+            fecha_actual = datetime.datetime.now()
+
+            fechas_pasadas: int = sum(
+                map(
+                    lambda x: x < fecha_actual, map(
+                        fg.string_a_fecha, fechas.split("_")
+                    )
+                )
+            )
+
+            revisiones: int = int(prestamo[2])
+
+            if fechas_pasadas > revisiones:
+
+                intereses: int = int(prestamo[1])
+                interes: float = int(prestamo[0]) / 100
+                deuda: int = int(prestamo[3])
+
+                for _ in range(fechas_pasadas - revisiones):
+                    intereses += (deuda + intereses) * interes
+
+                revisiones = fechas_pasadas
+
+                prestamo[2] = str(revisiones)
+                prestamo[1] = str(int(intereses))
+
+                df.loc[index, f"p{i} prestamo"] = \
+                    "_".join(prestamo)
+                guardar = True
+
+    if guardar:
+        df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+        df.to_csv(ajustes["nombre df"])
+
+
+
+
+
+
+

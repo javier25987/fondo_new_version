@@ -10,14 +10,17 @@ ajustes: dict = fg.abrir_ajustes()
 df = pd.read_csv(ajustes["nombre df"])
 
 index: int = st.session_state.usuario_actual_prestamos
+
 index_de_usuario: int = st.sidebar.number_input(
     "Numero de usuario: ",
     value=0, step=1
 )
+
 if st.sidebar.button("Buscar"):
     estado = fp.abrir_usuario(index_de_usuario, ajustes, df)
 
     if estado[0]:
+        fp.arreglar_asuntos(index_de_usuario, ajustes, df)
         st.session_state.usuario_actual_prestamos = index_de_usuario
         st.rerun()
     else:
