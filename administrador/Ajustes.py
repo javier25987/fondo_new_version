@@ -13,7 +13,7 @@ tab = list(
         [
             "Calendario", "Cuotas y multas", "Contraseñas",
             "Intereses", "Usuarios", "Fechas", "Tabla de usuarios",
-            "Guardado de datos", "Rifas"
+            "Guardado de datos", "Rifas", "Apariencia"
         ]
     )
 )
@@ -493,3 +493,19 @@ with tab[8]:
             if st.button("Cerrar rifa", key=f"key: {key}"):
                 fa.cerrar_una_rifa(j, ajustes)
             key += 1
+
+with tab[9]:
+    st.subheader("Modificar y eliminar anotaciones:")
+
+    col9_1 = st.columns([7, 3], vertical_alignment="center")
+
+    with col9_1[0]:
+        st.write(
+            f"Mostrar los menus para modificar y eliminar anotaciones:"
+        )
+        st.caption(f"# ***{ajustes["mostrar MyE"]}***")
+    with col9_1[1]:
+        if st.button("Invertir valor", key=f"key: {key}"):
+            ajustes["mostrar MyE"] = not ajustes["mostrar MyE"]
+            fa.guardar_y_avisar(ajustes)
+        key += 1

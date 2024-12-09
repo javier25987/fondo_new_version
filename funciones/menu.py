@@ -69,4 +69,3 @@ def hacer_commit(ajustes: dict) -> None:
         )
         time.sleep(1)
         st.rerun()
-

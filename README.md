@@ -11,7 +11,6 @@
 
 ## Deuda tecnica
 
-* rifas deben ser guardados en anotaciones
 * algoritmo para identificar boletas repetidas (seccion de rifas)
 * mejorar el algoritmo para la busqueda de una boleta (paginas/VerSocios.py)
 

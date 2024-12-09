@@ -625,10 +625,3 @@ def arreglar_asuntos(
     if guardar:
         df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
         df.to_csv(ajustes["nombre df"])
-
-
-
-
-
-
-

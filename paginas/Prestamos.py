@@ -237,48 +237,49 @@ else:
             numero_de_anotaciones.append(count)
             count += 1
 
-        st.divider()
+        if ajustes["mostrar MyE"]:
+            st.divider()
 
-        st.subheader("Modificar anotaciones:")
-        new_anotacion: str = st.text_input(
-            "Nueva anotacion modificada:"
-        )
-        cols_a_1 = st.columns(2, vertical_alignment="bottom")
-
-        with cols_a_1[0]:
-            pos_mod_anotacion: int = st.selectbox(
-                "Anotacion que desea modificar:",
-                numero_de_anotaciones
+            st.subheader("Modificar anotaciones:")
+            new_anotacion: str = st.text_input(
+                "Nueva anotacion modificada:"
             )
-        with cols_a_1[1]:
-            if st.button("Modificar"):
-                if st.session_state.admin:
-                    fp.modificar_anotacion(
-                        index, pos_mod_anotacion,
-                        new_anotacion,
-                        ajustes, df
-                    )
-                    st.rerun()
-                else:
-                    fg.advertencia()
+            cols_a_1 = st.columns(2, vertical_alignment="bottom")
 
-        st.divider()
-        st.subheader("Eliminar anotaciones:")
+            with cols_a_1[0]:
+                pos_mod_anotacion: int = st.selectbox(
+                    "Anotacion que desea modificar:",
+                    numero_de_anotaciones
+                )
+            with cols_a_1[1]:
+                if st.button("Modificar"):
+                    if st.session_state.admin:
+                        fp.modificar_anotacion(
+                            index, pos_mod_anotacion,
+                            new_anotacion,
+                            ajustes, df
+                        )
+                        st.rerun()
+                    else:
+                        fg.advertencia()
 
-        cols_a_2 = st.columns(2, vertical_alignment="bottom")
+            st.divider()
+            st.subheader("Eliminar anotaciones:")
 
-        with cols_a_2[0]:
-            pos_eli_anotacion: int = st.selectbox(
-                "Anotacion que desea eliminar:",
-                numero_de_anotaciones
-            )
-        with cols_a_2[1]:
-            if st.button("Eliminar"):
-                if st.session_state.admin:
-                    fp.eliminar_anotacion(
-                        index, pos_eli_anotacion,
-                        ajustes, df
-                    )
-                    st.rerun()
-                else:
-                    fg.advertencia()
+            cols_a_2 = st.columns(2, vertical_alignment="bottom")
+
+            with cols_a_2[0]:
+                pos_eli_anotacion: int = st.selectbox(
+                    "Anotacion que desea eliminar:",
+                    numero_de_anotaciones
+                )
+            with cols_a_2[1]:
+                if st.button("Eliminar"):
+                    if st.session_state.admin:
+                        fp.eliminar_anotacion(
+                            index, pos_eli_anotacion,
+                            ajustes, df
+                        )
+                        st.rerun()
+                    else:
+                        fg.advertencia()

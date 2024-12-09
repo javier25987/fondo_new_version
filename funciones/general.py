@@ -38,6 +38,7 @@ def crear_ajustes_de_el_programa() -> None:
         "path programa": f"{os.getcwd()}",
         "enlace repo": "",
         "commits hechos": 0,
+        "mostrar MyE": False,
         "r1 estado": False,
         "r1 numero de boletas": 0,
         "r1 numeros por boleta": 0,

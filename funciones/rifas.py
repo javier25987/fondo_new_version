@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import datetime
 
 
 def abrir_usuario(index: int, ajustes: dict, df) -> (bool, str):
@@ -65,6 +66,9 @@ def cargar_talonario(index: int, rifa: str, ajustes: dict, df):
 def pago_de_boletas(
         index: int, pago: int, rifa: str, ajustes: dict, df
 ):
+
+    pago_anotacion: int = pago
+
     st.header(f"№ {df["numero"][index]}: {df["nombre"][index].title()}")
     st.divider()
 
@@ -78,8 +82,14 @@ def pago_de_boletas(
         deuda_act -= pago
         df.loc[index, f"r{rifa} deudas"] = deuda_act
 
-        df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
-        df.to_csv(ajustes["nombre df"])
+        anotacion: str = (
+            f" ( {datetime.datetime.now().strftime("%Y/%m/%d - %H:%M")} ) "
+            f"Se pago {pago_anotacion:,} pesos en talonarios de la rifa № "
+            f"{rifa}."
+        )
+
+        realizar_anotacion(index, anotacion, ajustes, df)
+
         st.rerun()
 
 
