@@ -326,6 +326,14 @@ def escribir_prestamo(
         df, fiadores: list[int] = list,
         deudas_fiadores: list[int] = list
 ) -> None:
+    anotacion_final: str = (
+        f"( {datetime.datetime.now().strftime("%Y/%m/%d - %H:%M")} )"
+        f" Se ha concedido un prestamo por {valor:,} (de) pesos, el "
+        f"prestamo esta almacenado en la ranura № {ranura} se cuenta "
+        f"como fiadores a ({",".join(map(str, fiadores))}) con deudas"
+        f" de ({",".join(map(str, deudas_fiadores))})."
+    )
+
     interes: int = ajustes["interes < tope"]
 
     if valor > ajustes["tope de intereses"]:
@@ -376,9 +384,8 @@ def escribir_prestamo(
     df.loc[index, f"p{ranura} fechas de pago"] = calendario_de_meses(
         ajustes["fecha de cierre"]
     )
-    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
 
-    df.to_csv(ajustes["nombre df"])
+    realizar_anotacion(index, anotacion_final, ajustes, df)
 
 
 @st.dialog("Formulario de prestamo")
@@ -484,6 +491,8 @@ def modificar_anotacion(
 def pagar_un_prestamo(
         index: int, ranura: str, monto: int ,ajustes: dict, df
 ):
+    monto_nota: int = monto
+
     name: str = f"p{ranura} prestamo"
     info_prestamo: list[str] = df[name][index].split("_")
 
@@ -531,21 +540,14 @@ def pagar_un_prestamo(
     info_prestamo[5] = "#".join(deuda_con_fiadores)
 
     df.loc[index, name] = "_".join(info_prestamo)
-    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
-    df.to_csv(ajustes["nombre df"])
 
+    anotacion: str = (
+        f"( {datetime.datetime.now().strftime("%Y/%m/%d - %H:%M")}"
+        f" ) Se pago {monto_nota:,} pesos al prestamo vigente en la "
+        f"ranura № {ranura}."
+    )
 
-@st.dialog("🚨 Advertencia 🚨")
-def advertencia():
-    st.write(
-        "Tiene que ingresar como administrador para poder conceder"
-        " prestamos, de lo contrario esto no sera posible."
-    )
-    st.page_link(
-        "session/login.py",
-        label="Ingresar",
-        icon=":material/login:"
-    )
+    realizar_anotacion(index, anotacion, ajustes, df)
 
 
 @st.dialog("Pago de prestamo")

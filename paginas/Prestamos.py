@@ -185,7 +185,7 @@ else:
                         estado_prestamo[1], icon="🚨"
                     )
             else:
-                fp.advertencia()
+                fg.advertencia()
 
     with tab3:
         capital: list = fp.consultar_capital_disponible(
@@ -252,12 +252,15 @@ else:
             )
         with cols_a_1[1]:
             if st.button("Modificar"):
-                fp.modificar_anotacion(
-                    index, pos_mod_anotacion,
-                    new_anotacion,
-                    ajustes, df
-                )
-                st.rerun()
+                if st.session_state.admin:
+                    fp.modificar_anotacion(
+                        index, pos_mod_anotacion,
+                        new_anotacion,
+                        ajustes, df
+                    )
+                    st.rerun()
+                else:
+                    fg.advertencia()
 
         st.divider()
         st.subheader("Eliminar anotaciones:")
@@ -271,8 +274,11 @@ else:
             )
         with cols_a_2[1]:
             if st.button("Eliminar"):
-                fp.eliminar_anotacion(
-                    index, pos_eli_anotacion,
-                    ajustes, df
-                )
-                st.rerun()
+                if st.session_state.admin:
+                    fp.eliminar_anotacion(
+                        index, pos_eli_anotacion,
+                        ajustes, df
+                    )
+                    st.rerun()
+                else:
+                    fg.advertencia()

@@ -11,8 +11,7 @@
 
 ## Deuda tecnica
 
-* hay que completar la funcion "obtener_estado_de_cuenta" (funciones/cuotas.py)
-* (opcional) incluir modificaciones a prestamos
+* rifas deben ser guardados en anotaciones
 * algoritmo para identificar boletas repetidas (seccion de rifas)
 * mejorar el algoritmo para la busqueda de una boleta (paginas/VerSocios.py)
 
@@ -21,7 +20,7 @@
 * [X] arranque
 * [X] menu
 * [X] cuotas
-* [ ] prestamos
+* [X] prestamos
 * [ ] rifas
 * [ ] ver socios
 * [X] ajustes
@@ -29,17 +28,8 @@
 
 ## Errores de el programa
 
-Esto no es una excusa pero cuando inicie este proyecto no sabia muy bien como
-hacerlo ahora mi conociento es mas amplio y puedo decir que tengo la capacidad
-pero hay muchas cosas y muchas funciones principalmente que han de ser refactorizadas
-ya que en el momento en el que fueron hechas no habia un pleno conocimiento de
-el tema y hay muchas cosas que pueden ser planeadas de cero y con una mejor
-arquitectura de programa ya que actualmente el programa cuenta con muchos parches
-internos y una terrible arquitectura ya que todo fue hecho sobre el momento. Esto
-no quiere decir que el programa no sea funcional y que este es completamente funcional
-pero a pesar de todo esto hay muchas cosas que se pueden mejorar para ampliar la
-eficiencia de el programa. por eso inicie esta version la cual tiene todo eso mejorado
-y mejores funciones dentro de si
+actualmenre solo hay que añadir un boton de actualizacion que copie todos los
+hechos en el repositorio madre
 
 ## Agradecimiento
 

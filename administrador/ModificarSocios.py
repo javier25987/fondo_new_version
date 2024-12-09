@@ -35,6 +35,8 @@ with tabs[0]:
                 lista_elecciones
             )
     match datos:
+        case "TODO":
+            st.table(df)
         case "informacion general":
             st.table(
                 df[
@@ -104,8 +106,6 @@ with tabs[0]:
                         ]
                     ]
                 )
-        case "TODO":
-            st.table(df)
 
 with tabs[2]:
     st.header("Datos de el nuevo usuario:")

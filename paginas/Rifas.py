@@ -139,11 +139,14 @@ else:
             )
         with cols_a_1[1]:
             if st.button("Modificar"):
-                fr.modificar_anotacion(
-                    index, pos_mod_anotacion,
-                    new_anotacion, ajustes, df
-                )
-                st.rerun()
+                if st.session_state.admin:
+                    fr.modificar_anotacion(
+                        index, pos_mod_anotacion,
+                        new_anotacion, ajustes, df
+                    )
+                    st.rerun()
+                else:
+                    fg.advertencia()
 
         st.divider()
         st.subheader("Eliminar anotaciones:")
@@ -157,8 +160,11 @@ else:
             )
         with cols_a_2[1]:
             if st.button("Eliminar"):
-                fr.eliminar_anotacion(
-                    index, pos_eli_anotacion,
-                    ajustes, df
-                )
-                st.rerun()
+                if st.session_state.admin:
+                    fr.eliminar_anotacion(
+                        index, pos_eli_anotacion,
+                        ajustes, df
+                    )
+                    st.rerun()
+                else:
+                    fg.advertencia()

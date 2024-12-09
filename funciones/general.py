@@ -210,5 +210,15 @@ def ejecutar_comando_git(comando):
         print(f"Salida: {salida.decode("utf-8")}")
 
 
-
-
+@st.dialog("🚨 Advertencia 🚨")
+def advertencia():
+    st.write(
+        "Para poder continuar con este proceso es necesario "
+        " ingresar como administrador, de lo contrario no sera"
+        " posible."
+    )
+    st.page_link(
+        "session/login.py",
+        label="Ingresar",
+        icon=":material/login:"
+    )
