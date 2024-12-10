@@ -1,7 +1,7 @@
 import funciones.general as fg
 import streamlit as st
 
-st.header("Creacion de archivos de ajustes y almacenamiento.")
+st.header("Creacion de archivos elementales")
 st.markdown(
     f"""
         > **NOTA:** En caso de haber creado el archivo de ajustes ingrese al
@@ -18,4 +18,9 @@ if not st.session_state.ajustes_exist:
 if st.session_state.ajustes_exist and not st.session_state.df_exist:
     if st.button("Crear tabla"):
         fg.crear_tabla_principal()
+        st.rerun()
+
+if not st.session_state.banco_exist:
+    if st.button("Crear banco"):
+        fg.crear_banco()
         st.rerun()

@@ -3,8 +3,8 @@
 =    FONDO SAN JAVIER     =
 =                         =
 ===========================
-> Nombre:Javier Cortes
-> Numero:0
+> Nombre:Hernesto Matallana
+> Numero:2
 > Puestos:1
 ===========================
 > Multas pagadas:0
@@ -19,5 +19,5 @@
 > Total pagado:30,000
 ===========================
 > Fecha:2024.12.11
-> Hora:00:30
+> Hora:01:00
 ===========================

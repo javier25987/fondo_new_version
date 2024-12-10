@@ -13,6 +13,9 @@ if "df_exist" not in st.session_state:
 if "ajustes_exist" not in st.session_state:
     st.session_state.ajustes_exist = False
 
+if "banco_exist" not in st.session_state:
+    st.session_state.banco_exist = False
+
 if "nombre_para_busqueda" not in st.session_state:
     st.session_state.nombre_para_busqueda = ""
 
@@ -107,6 +110,14 @@ try:
 except:
     pass
 
+# revisar si existe banco
+try:
+    with open("banco.json", "r") as f:
+        f.close()
+    st.session_state.banco_exist = True
+except:
+    pass
+
 # revisar si esiste la tabla
 try:
     with open("ajustes.json", "r") as f:
@@ -121,7 +132,13 @@ except:
 
 dict_general: dict = {}
 
-if st.session_state.ajustes_exist and st.session_state.df_exist:
+general_control: bool = (
+    st.session_state.ajustes_exist and
+    st.session_state.df_exist and
+    st.session_state.banco_exist
+)
+
+if general_control:
     dict_general["Paginas Generales"] = paginas_generales
 
     if st.session_state.admin:

@@ -86,6 +86,16 @@ def crear_ajustes_de_el_programa() -> None:
     guardar_ajustes(ajustes)
 
 
+def crear_banco():
+    banco: dict = {
+        "dinero pagado": 0,
+        "id": 0
+    }
+    with open("banco.json", "w") as f:
+        json.dump(banco, f)
+        f.close()
+
+
 def crear_tabla_principal() -> None:
     try:
         ajustes: dict = abrir_ajustes()

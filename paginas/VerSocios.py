@@ -4,6 +4,7 @@ import streamlit as st
 import pandas as pd
 
 ajustes: dict = fg.abrir_ajustes()
+banco: dict = fg.abrir_banco()
 df = pd.read_csv(ajustes["nombre df"])
 
 index = st.session_state.usuario_actual_ver
@@ -28,7 +29,7 @@ tabs = st.tabs(
     [
         "Anotaciones", "Buscar Usuarios", "Ver si necesita acuerdo",
         "Verificar ranura 16", "Buscar boleta", "Tabla de Usuarios",
-        "Archivo de ajustes"
+        "Archivo de ajustes", "Archivo banco"
     ]
 )
 with tabs[0]:
@@ -190,3 +191,6 @@ with tabs[5]:
 with tabs[6]:
     ajustes["clave de acceso"] = "********"
     st.json(ajustes)
+
+with tabs[7]:
+    st.json(banco)
