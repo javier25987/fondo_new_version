@@ -34,6 +34,8 @@ if "ranura_actual" not in st.session_state:
 if "nombre_para_busqueda" not in st.session_state:
     st.session_state.nombre_para_busqueda = ""
 
+if "buscar_banco" not in st.session_state:
+    st.session_state.buscar_banco = False
 
 paginas_generales: list = [
     st.Page(

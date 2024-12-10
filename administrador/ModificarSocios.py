@@ -75,7 +75,8 @@ with tabs[0]:
             if prestamo == "TODAS":
                 lista_columnas: list[str] = [
                     "numero", "nombre", "prestamos hechos",
-                    "dinero en prestamos", "dinero por si mismo"
+                    "dinero en prestamos", "dinero por si mismo",
+                    "dinero por intereses vencidos"
                 ]
                 for i in range(1, 17):
                     lista_columnas += [
@@ -215,7 +216,8 @@ with tabs[1]:
                     "Columna a modificar:",
                     (
                         "prestamos hechos", "dinero en prestamos",
-                        "dinero por si mismo", # "prestamo en ranura",
+                        "dinero por si mismo", "dinero por intereses vencidos",
+                        # "prestamo en ranura",
                         "deudas por fiador", "fiador de"
                     ), key=f"key: {key}"
                 )
@@ -242,6 +244,7 @@ with tabs[1]:
         "r1 deudas", "r2 deudas", "r3 deudas", "r4 deudas",
         "prestamos hechos", "dinero en prestamos",
         "dinero por si mismo", "deudas por fiador",
+        "dinero por intereses vencidos"
     ]
 
     columnas_especiales: list[str] = [

@@ -5,6 +5,7 @@ import pandas as pd
 import os
 
 ajustes: dict = fg.abrir_ajustes()
+banco: dict = fg.abrir_banco()
 df = pd.read_csv(ajustes["nombre df"])
 
 if ajustes["calendario"] == "n":
@@ -40,7 +41,12 @@ else:
         df["puestos"][index]} puesto(s)"
     )
 
-    tabs = st.tabs(["Pagar cuotas y multas", "Anotaciones"])
+    tabs = st.tabs(
+        [
+            "Pagar cuotas y multas", "Pagos por transferencia",
+            "Anotaciones"
+        ]
+    )
 
     with tabs[0]:
         col1_1, col1_2 = st.columns(
@@ -83,10 +89,20 @@ else:
             "Numero de multas a pagar:",
             range(numero_multas_a_pagar + 1)
         )
-        tesorero_a_pagar: str = st.selectbox(
-            "Tesorero:",
-            ("1", "2", "3", "4")
-        )
+
+        cols_0_1 = st.columns(2)
+        with cols_0_1[0]:
+            tesorero_a_pagar: str = st.selectbox(
+                "Tesorero:",
+                ("1", "2", "3", "4")
+            )
+
+        with cols_0_1[1]:
+            modo_de_pago: str = st.selectbox(
+                "Modo de pago:",
+                ("Efecctivo", "Transferencia")
+            )
+
         col3_1, col3_2 = st.columns(2)
 
         if col3_1.button("Iniciar proceso de pago"):
@@ -99,13 +115,14 @@ else:
                 st.balloons()
                 fc.formulario_de_pago(
                     index, cuotas_a_pagar, multas_a_pagar,
-                    tesorero_a_pagar, ajustes, df
+                    tesorero_a_pagar, modo_de_pago ,ajustes,
+                    banco, df
                 )
         if col3_2.button("Abrir ultimo cheque"):
             with st.spinner("Abriendo cheque..."):
                 os.system("notepad.exe text/cheque_de_cuotas.txt")
 
-    with tabs[1]:
+    with tabs[2]:
         st.subheader("Realizar una anotacion:")
         anotacion: str = st.text_input("Nueva anotacion:")
 
@@ -169,3 +186,58 @@ else:
                         ajustes, df
                     )
                     st.rerun()
+
+    with tabs[1]:
+        col2_3 = st.columns([4, 6], vertical_alignment="center")
+
+        with col2_3[0]:
+            st.caption(f"# ***{banco["dinero pagado"]:,}***")
+
+        with col2_3[1]:
+            st.info(
+                "Todo este dinero ha sido pagado por transferencia"
+                " bancaria entre todos los respectivos usuarios"
+                , icon="ℹ️"
+            )
+        st.divider()
+
+        col2_1 = st.columns([3, 5, 2], vertical_alignment="bottom")
+
+        if st.session_state.buscar_banco:
+            with col2_1[1]:
+                buscar_usuario: int = st.number_input(
+                    "Buscar usuario:", value=0, step=1
+                )
+
+        with col2_1[0]:
+            if not st.session_state.buscar_banco:
+                mensaje_boton: str = "Buscar"
+            else:
+                mensaje_boton: str = "Ver todo"
+
+            if st.button(mensaje_boton, key="mi boton"):
+                st.session_state.buscar_banco = \
+                    not st.session_state.buscar_banco
+                st.rerun()
+
+        st.divider()
+        if st.session_state.buscar_banco:
+            diccionario: dict = fc.buscar_transferencia(
+                buscar_usuario, banco
+            )
+        else:
+            diccionario: dict = banco
+
+        for key_dict in diccionario:
+
+            if key_dict in ("dinero pagado", "id"):
+                continue
+
+            st.markdown(
+                f"""
+                > ***{key_dict}***: 
+                >      
+                >{diccionario[key_dict]}
+                   
+                """
+            )

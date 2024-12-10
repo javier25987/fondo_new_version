@@ -45,6 +45,7 @@ def insertar_socios(
             "prestamos hechos": [0],
             "dinero en prestamos": [0],
             "dinero por si mismo": [0],
+            "dinero por intereses vencidos": [0],
             "p1 estado": ["activo"],
             "p1 prestamo": ["0_0_0_0_n_n"],
             "p1 fechas de pago": ["n"],
@@ -197,7 +198,7 @@ def contar_multas(index: int, df):
     return count
 
 
-def sumar_cuotas(s, n, sumar=True) -> str:
+def sumar_cuotas(s, n) -> str:
     s = list(s)
 
     for i in range(50):

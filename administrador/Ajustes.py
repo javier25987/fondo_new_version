@@ -346,7 +346,7 @@ with tab[6]:
         key += 1
 
 with tab[7]:
-    col7_1 = st.columns(2)
+    col7_1 = st.columns(2, vertical_alignment="center")
 
     with col7_1[0]:
         st.subheader("Ruta de el programa: ")

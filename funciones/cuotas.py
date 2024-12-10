@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import datetime
+import json
 
 
 def sumar_una_multa(s: list, semana: int = 0) -> list:
@@ -278,7 +279,8 @@ def crear_nuevo_cheque(
 @st.dialog("Formulario de pago")
 def formulario_de_pago(
         index: int, cuotas: int, multas: int,
-        tesorero: str, ajustes: dict, df
+        tesorero: str, modo_de_pago: str ,
+        ajustes: dict, banco: dict , df
 ) -> None:
 
     st.header(f"№ {index} - {df["nombre"][index].title()}")
@@ -311,8 +313,10 @@ def formulario_de_pago(
     st.write(f"Total en multas: {"{:,}".format(total_multas)}")
     st.divider()
 
+    total_a_anotar: int = total_multas + total_cuotas
+
     st.write(f"Total neto a pagar: {
-        "{:,}".format(total_multas + total_cuotas)
+        "{:,}".format(total_a_anotar)
     }")
     st.write(f"Se paga a el tesorero: {tesorero}")
     st.divider()
@@ -336,6 +340,9 @@ def formulario_de_pago(
             ajustes["valor multa"], cuotas,
             ajustes["valor cuota"], puestos, tesorero
         )
+
+        if modo_de_pago == "Transferencia":
+            anotar_pago_por_banco(index, total_a_anotar, banco, df)
 
         df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
         df.to_csv(ajustes["nombre df"])
@@ -442,3 +449,42 @@ def modificar_anotacion(
     df.loc[index, f"anotaciones de cuotas"] = anotaciones
     df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
     df.to_csv(ajustes["nombre df"])
+
+
+def anotar_pago_por_banco\
+(
+    index: int , monto: int, banco: dict, df
+) -> None:
+
+    nombre: str = df["nombre"][index].title()
+
+    anotacion: str = (
+        f"***{datetime.datetime.now().strftime("%Y/%m/%d - %H:%M")}***"
+        f" el usuario ***№ {index} _ {nombre}*** ha pagado ***{monto}***"
+        f" por transferencia bancaria"
+    )
+
+    id_anotacion: str = f"ID: {index}_{banco["id"]}"
+    banco["id"] += 1
+
+    banco[id_anotacion] = anotacion
+
+    banco["dinero pagado"] += monto
+
+    with open("banco.json", "w") as f:
+        json.dump(banco, f)
+        f.close()
+
+
+def buscar_transferencia(index: int, banco: dict) -> dict:
+
+    referencia: str = f"{index}_"
+    resultado: dict = {}
+
+    for key in banco:
+        if referencia in key:
+            resultado[key] = banco[key]
+
+    return resultado
+
+

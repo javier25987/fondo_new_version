@@ -506,12 +506,24 @@ def pagar_un_prestamo(
     ) if info_prestamo[5] != "n" else ["n"]
 
     # pago de intereses
-    if intereses > monto:
-        intereses -= monto
-        monto = 0
-    else:
-        monto -= intereses
-        intereses = 0
+    if intereses > 0:
+        intereses_pagados: int = \
+            int(df["dinero por intereses vencidos"][index])
+
+        if intereses > monto:
+            intereses -= monto
+
+            df.loc[index, "dinero por intereses vencidos"] = \
+                monto + intereses_pagados
+
+            monto = 0
+        else:
+            monto -= intereses
+
+            df.loc[index, "dinero por intereses vencidos"] = \
+                intereses + intereses_pagados
+
+            intereses = 0
 
     # pago de deuda
     deuda -= monto

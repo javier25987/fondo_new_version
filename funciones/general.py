@@ -19,6 +19,13 @@ def guardar_ajustes(ajustes: dict) -> None:
         f.close()
 
 
+def abrir_banco() -> dict:
+    with open("banco.json", "r") as f:
+        banco: dict = json.load(f)
+        f.close()
+    return banco
+
+
 def crear_ajustes_de_el_programa() -> None:
     ajustes: dict = {
         "valor multa": 3000,
@@ -123,6 +130,7 @@ def crear_tabla_principal() -> None:
                 "prestamos hechos": [],
                 "dinero en prestamos": [],
                 "dinero por si mismo": [],
+                "dinero por intereses vencidos": [],
                 "p1 estado": [],
                 "p1 prestamo": [],
                 "p1 fechas de pago": [],
