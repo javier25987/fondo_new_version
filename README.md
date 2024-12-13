@@ -11,7 +11,6 @@
 ## Deuda tecnica
 
 * algoritmo para identificar boletas repetidas (seccion de rifas)
-* mejorar el algoritmo para la busqueda de una boleta (paginas/VerSocios.py)
 
 ## Secciones finalizadas
 
@@ -20,7 +19,7 @@
 * [X] cuotas
 * [X] prestamos
 * [ ] rifas
-* [ ] ver socios
+* [X] ver socios
 * [X] ajustes
 * [X] modificar socios
 

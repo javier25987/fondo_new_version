@@ -475,7 +475,6 @@ def anotar_pago_por_banco\
 
 
 def buscar_transferencia(index: int, banco: dict) -> dict:
-
     referencia: str = f"{index}_"
     resultado: dict = {}
 

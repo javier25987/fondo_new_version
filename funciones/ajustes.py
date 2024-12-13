@@ -23,8 +23,6 @@ def crear_listado_de_fechas(primera_fecha: str, dobles: list[str]) -> str:
         fechas.append(f_new)
         i += 1
 
-    print(f"fechas creadas en el sistema: {len(fechas)}")
-
     for i in dobles:
         if i not in fechas:
             return "n"
@@ -101,7 +99,6 @@ def cargar_datos_de_rifa(
         numeros_por_boleta: int, boletas_por_talonario: int,
         costo_de_boleta: int, costo_de_administracion: int,
         fecha_de_cierre, premios: list[int]
-
 ) -> None:
     suma_de_premios = sum(premios)
     ganancias_por_boleta = (numero_de_boletas * costo_de_boleta) \
