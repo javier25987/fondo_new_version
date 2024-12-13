@@ -1,5 +1,6 @@
+# eliminamos los ajustes y el archivo banco
 ajustes.json
 banco.json
-FONDO_1_2024.csv
 
+# eliminamos todos los archivos .csv
 *.csv
