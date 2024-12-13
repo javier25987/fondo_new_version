@@ -1,9 +1,12 @@
+# importamos las bibliotecas
 import streamlit as st
 import pandas as pd
 import json
 
+# configuracion de el tamanio de la pagina
 st.set_page_config(layout="wide")
 
+# creacion de variables para la gestion
 if "admin" not in st.session_state:
     st.session_state.admin = False
 
@@ -40,6 +43,7 @@ if "nombre_para_busqueda" not in st.session_state:
 if "buscar_banco" not in st.session_state:
     st.session_state.buscar_banco = False
 
+# paginas de usuario general
 paginas_generales: list = [
     st.Page(
         "paginas/Menu.py",
@@ -68,6 +72,7 @@ paginas_generales: list = [
     )
 ]
 
+# paginas de el modo administardor
 paginas_de_adiministrador: list = [
     st.Page(
         "administrador/ModificarSocios.py",
@@ -86,6 +91,7 @@ paginas_de_adiministrador: list = [
     )
 ]
 
+# pagina para ingresar como administrador
 ingresar_admin: list = [
     st.Page(
         "session/login.py",
@@ -94,6 +100,7 @@ ingresar_admin: list = [
     )
 ]
 
+# pagina para crear los archivos
 archivos_elementales: list = [
     st.Page(
         "session/files.py",
@@ -130,14 +137,16 @@ try:
 except:
     pass
 
-dict_general: dict = {}
-
 general_control: bool = (
     st.session_state.ajustes_exist and
     st.session_state.df_exist and
     st.session_state.banco_exist
 )
 
+# diccionario de paginas que se van a mostrar
+dict_general: dict = {}
+
+# cargar las paginas a el diccionario
 if general_control:
     dict_general["Paginas Generales"] = paginas_generales
 
@@ -148,5 +157,6 @@ if general_control:
 else:
     dict_general["Paginas Generales"] = archivos_elementales
 
+# cargar las paginas para la vista
 pg = st.navigation(dict_general)
 pg.run()

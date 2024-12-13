@@ -237,7 +237,8 @@ else:
                 f"""
                 > ***{key_dict}***: 
                 >      
-                >{diccionario[key_dict]}
-                   
+                > **fecha:** {diccionario[key_dict]["fecha"]}  
+                > **quien:** № {diccionario[key_dict]["quien"]} _ {df["nombre"][diccionario[key_dict]["quien"]].title()}  
+                > **cuanto:** {diccionario[key_dict]["cuanto"]:,}  
                 """
             )

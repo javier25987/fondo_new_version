@@ -149,34 +149,48 @@ with tabs[2]:
         ]
     )
 
-with tabs[3]:
+with (tabs[3]):
     tabla_ranura = df[["numero", "nombre", "p16 estado"]]
 
-    tabla_ranura["p16 estado"] = tabla_ranura[
-        "p16 estado"
-    ].apply(
-        lambda x: "✅" if x == "activo" else "🚨"
-    )
+    for i in range(len(tabla_ranura["p16 estado"])):
+        tabla_ranura.loc[i, "p16 estado"] = \
+            "✅" if tabla_ranura["p16 estado"][i] == "activo" else "🚨"
+
     st.table(tabla_ranura)
 
 with tabs[4]:
-    rifa_a_buscar = st.selectbox(
+    rifa_a_buscar: str = st.selectbox(
         "Seleccione la rifa en la que desea buscar:",
         (
             "1", "2", "3", "4"
         )
     )
-    boleta_a_buscar = st.text_input(
-        "Selecciones la boleta que desea buscar:"
-    )
+
+    col4_1 = st.columns(2)
+
+    with col4_1[0]:
+        boleta_a_buscar: str = st.text_input(
+            "Numero que desea buscar en la boleta:"
+        )
+
+    with col4_1[1]:
+        numeros_boleta: str = ajustes[f"r{rifa_a_buscar} numeros por boleta"]
+
+        poscion_boleta: str = st.selectbox(
+            "Posicion de el numero en la boleta:",
+            range(1, numeros_boleta + 1)
+        )
+
+    tabla_boletas = df
+
     if st.button("Buscar", key="00010"):
-        tabla_boletas = df[
-            df[f"r{rifa_a_buscar} boletas"].str.contains(
-                boleta_a_buscar, case=False, na=False
-            )
-        ]
-    else:
-        tabla_boletas = df
+        if boleta_a_buscar != "":
+            if poscion_boleta is not None:
+                numero_usuario_boleta: int = fv.buscar_boleta(
+                    df, rifa_a_buscar, boleta_a_buscar, poscion_boleta
+                )
+                if numero_usuario_boleta >= 0:
+                    tabla_boletas = df[df[f"numero"] == numero_usuario_boleta]
 
     st.divider()
     st.table(

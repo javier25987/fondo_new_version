@@ -456,13 +456,11 @@ def anotar_pago_por_banco\
     index: int , monto: int, banco: dict, df
 ) -> None:
 
-    nombre: str = df["nombre"][index].title()
-
-    anotacion: str = (
-        f"***{datetime.datetime.now().strftime("%Y/%m/%d - %H:%M")}***"
-        f" el usuario ***№ {index} _ {nombre}*** ha pagado ***{monto}***"
-        f" por transferencia bancaria"
-    )
+    anotacion: dict = {
+        "fecha": datetime.datetime.now().strftime("%Y/%m/%d - %H:%M"),
+        "quien": index,
+        "cuanto": monto
+    }
 
     id_anotacion: str = f"ID: {index}_{banco["id"]}"
     banco["id"] += 1
