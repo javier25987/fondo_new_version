@@ -265,5 +265,3 @@ def advertencia():
         label="Ingresar",
         icon=":material/login:"
     )
-
-    # hice un nuevo cambio aca
