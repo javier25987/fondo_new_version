@@ -246,4 +246,4 @@ def advertencia():
     )
 
 
-# este es un commnetario para provar un eroror 
+# este es un commnetario para provar un eroror
