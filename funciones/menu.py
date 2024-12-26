@@ -53,13 +53,10 @@ def hacer_commit(ajustes: dict) -> None:
         mensaje_de_comit = f"{ajustes["commits hechos"]}_{fecha_hora_str}"
         fg.ejecutar_comando_git(["git", "commit", "-m", mensaje_de_comit])
 
-        try:
-            st.write("Guardando en GitHub ...")
-            fg.ejecutar_comando_git(
-                ["git", "push"]
-            )
-        except:
-            error_commit(ajustes)
+        st.write("Guardando en GitHub ...")
+        fg.ejecutar_comando_git(
+            ["git", "push"]
+        )
 
         fg.guardar_ajustes(ajustes)
         status.update(
