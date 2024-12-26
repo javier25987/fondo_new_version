@@ -1,3 +1,5 @@
+import time
+
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -228,6 +230,8 @@ def error_commit() -> None:
         """,
         icon="🚨"
     )
+
+    time.sleep(15)
 
 
 def ejecutar_comando_git(comando):
