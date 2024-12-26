@@ -223,11 +223,11 @@ def string_a_fecha(fecha: str):
 def error_commit() -> None:
     st.write(
         """
-        Los nuevos cambios fueron guardados en el computador pero
+        🚨  Los nuevos cambios fueron guardados en el computador pero
         no fueron guardados en internet por favor revise si GitHub
         esta correctamente abierto o si es la primera vez que se 
         guarda cambios que el repositorio remoto esta correctamente
-        configurado
+        configurado  🚨
         """   # , icon="🚨"
     )
 
