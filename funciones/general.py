@@ -221,13 +221,15 @@ def string_a_fecha(fecha: str):
 
 @st.dialog("🚨  Error!!  🚨")
 def error_commit() -> None:
-    st.write(
+    st.markdown(
         """
         Los nuevos cambios fueron guardados en el computador pero
         no fueron guardados en internet por favor revise si GitHub
         esta correctamente abierto o si es la primera vez que se 
         guarda cambios que el repositorio remoto esta correctamente
         configurado  🚨
+        
+        > Este proceso se demora un poco, por favor espere 10 segundos
         """   # , icon="🚨"
     )
 
