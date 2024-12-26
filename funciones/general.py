@@ -231,8 +231,7 @@ def error_commit() -> None:
         icon="🚨"
     )
 
-    if st.button("Cerrar"):
-        pass
+    time.sleep(15)
 
 
 def ejecutar_comando_git(comando):
