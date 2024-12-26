@@ -225,9 +225,9 @@ def error_commit() -> None:
         """
         Los nuevos cambios fueron guardados en el computador pero
         no fueron guardados en internet por favor revise si GitHub
-        esta correctamente abierto o si es la primera vez que se 
-        guarda cambios que el repositorio remoto esta correctamente
-        configurado  🚨
+        esta correctamente abierto, si cuenta con conexion a internet
+        o si es la primera vez que se guarda cambios que el repositorio
+        remoto esta correctamente configurado  🚨
         
         > **NOTA:** Este proceso se demora un poco, por favor espere
         > 10 segundos
