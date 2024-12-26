@@ -229,7 +229,8 @@ def error_commit() -> None:
         guarda cambios que el repositorio remoto esta correctamente
         configurado  🚨
         
-        > Este proceso se demora un poco, por favor espere 10 segundos
+        > **NOTA:** Este proceso se demora un poco, por favor espere
+        > 10 segundos
         """   # , icon="🚨"
     )
 
