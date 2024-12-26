@@ -229,8 +229,8 @@ def error_commit() -> None:
         o si es la primera vez que se guarda cambios que el repositorio
         remoto esta correctamente configurado  🚨
         
-        > **NOTA:** Este proceso se demora un poco, por favor espere
-        > 10 segundos
+        > **NOTA:** Este proceso puede demorar un poco, por favor
+        > espere 10 segundos
         """   # , icon="🚨"
     )
 
