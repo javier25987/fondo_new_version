@@ -217,6 +217,19 @@ def string_a_fecha(fecha: str):
     )
 
 
+@st.dialog("🚨  Error!!  🚨")
+def error_commit() -> None:
+    st.error(
+        """
+        Los nuevos cambios fueron guardados en el computador pero
+        no fueron guardados en internet por favor revise si GitHub
+        esta abierto o si es la primera vez que se guardan cambios
+        que el repositorio remoto esta correctamente configurado
+        """,
+        icon="🚨"
+    )
+
+
 def ejecutar_comando_git(comando):
     proceso = subprocess.Popen(
         comando,
@@ -228,6 +241,8 @@ def ejecutar_comando_git(comando):
 
     if proceso.returncode != 0:
         print(f"Error: {error.decode("utf-8")}")
+        if "remote:" in error.decode("utf-8"):
+            error_commit()
     else:
         print(f"Salida: {salida.decode("utf-8")}")
 
@@ -245,4 +260,4 @@ def advertencia():
         icon=":material/login:"
     )
 
-    # here i have a change but i don't now
+    # hice un nuevo cambio aca

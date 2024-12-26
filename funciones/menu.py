@@ -22,20 +22,6 @@ def cargar_multas(ajustes: dict) -> None:
     bar.empty()
 
 
-@st.dialog("🚨  Error!!  🚨")
-def error_commit(ajustes: dict) -> None:
-    st.error(
-        """
-        Los nuevos cambios fueron guardados en el computador pero
-        no fueron guardados en internet por favor revise si GitHub
-        esta abierto o si es la primera vez que se guardan cambios
-        que el repositorio remoto esta correctamente configurado
-        """,
-        icon="🚨"
-    )
-    st.link_button("GitHub", ajustes["enlace repo"])
-
-
 def hacer_commit(ajustes: dict) -> None:
     with st.status("Guardando cambios ...", expanded=True) as status:
         os.chdir(ajustes["path programa"])
