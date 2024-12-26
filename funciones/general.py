@@ -243,6 +243,8 @@ def ejecutar_comando_git(comando):
         print(f"Error: {error.decode("utf-8")}")
         if "remote:" in error.decode("utf-8"):
             error_commit()
+        if "fatal: unable to access" in error.decode("utf-8"):
+            error_commit()
     else:
         print(f"Salida: {salida.decode("utf-8")}")
 
