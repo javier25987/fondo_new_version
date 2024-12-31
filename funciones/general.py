@@ -1,10 +1,9 @@
-import time
-
 import streamlit as st
 import pandas as pd
 import subprocess
 import datetime
 import json
+import time
 import os
 
 
@@ -202,12 +201,6 @@ def crear_tabla_principal() -> None:
             df.to_csv(nombre)
     except:
         st.error("No se encuentran los ajustes", icon="🚨")
-
-
-def modificar_string(s: str, index_s: int, new_elemento: str) -> str:
-    s: list[str] = list(s)
-    s[index_s] = new_elemento
-    return "".join(s)
 
 
 def string_a_fecha(fecha: str):
