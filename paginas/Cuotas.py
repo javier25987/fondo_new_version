@@ -49,19 +49,9 @@ else:
     )
 
     with tabs[0]:
-        col1_1, col1_2 = st.columns(
-            [8, 2],
-            vertical_alignment="bottom"
+        st.header(
+            f"Numero de telefono: {df["numero celular"][index]}"
         )
-        with col1_1:
-            st.header(
-                f"Numero de telefono: {df["numero celular"][index]}"
-            )
-        with col1_2:
-            if st.button("Estado de cuenta"):
-                with st.spinner("Obteniendo estado de cuenta..."):
-                    fc.obtener_estado_de_cuenta(index, df)
-                    os.system("notepad.exe text/estado_de_cuenta.txt")
 
         st.divider()
 

@@ -28,8 +28,7 @@ if st.sidebar.button("Buscar", key="00011"):
 tabs = st.tabs(
     [
         "Anotaciones", "Buscar Usuarios", "Ver si necesita acuerdo",
-        "Verificar ranura 16", "Buscar boleta", "Tabla de Usuarios",
-        "Archivo de ajustes", "Archivo banco"
+        "Verificar ranura 16", "Buscar boleta", "Tabla de socios"
     ]
 )
 with tabs[0]:
@@ -201,10 +200,3 @@ with tabs[4]:
 
 with tabs[5]:
     st.table(df)
-
-with tabs[6]:
-    ajustes["clave de acceso"] = "********"
-    st.json(ajustes)
-
-with tabs[7]:
-    st.json(banco)

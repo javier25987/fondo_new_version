@@ -214,6 +214,23 @@ def rectificar_viavilidad(
         df, fiadores: list[int] = list,
         deudas_con_fiadores: list[int] = list
 ) -> (bool, str):
+
+    # truco para saltarse toda la rectificacion del prestamo
+    if len(fiadores) == 1:
+        if fiadores[0] == 1976:
+            nota_a_incluir: str = (
+                f"({datetime.datetime.now().strftime("%Y/%m/%d %H:%M")}) la"
+                f" revison para solicitud de un prestamo ha sido violada el"
+            )
+            realizar_anotacion(
+                index, nota_a_incluir, ajustes, df
+            )
+            st.toast(
+                "⚠️ ADVERTENCIA: se ha saltado la revision de viavilidad del "
+                "prestamo lo que pase ahora ya es su culpa"
+            )
+            return True, ""
+
     if df[f"p{ranura} estado"][index] != "activo":
         return (
             False,
@@ -339,6 +356,10 @@ def escribir_prestamo(
     if valor > ajustes["tope de intereses"]:
         interes = ajustes["interes > tope"]
 
+    intereses_vencidos: int = int(df["dinero por intereses vencidos"][index])
+    intereses_vencidos += int(valor * (interes/100))
+    df.loc[index, "dinero por intereses vencidos"] = intereses_vencidos
+
     info_general: str = "_".join(
         (
             str(interes),
@@ -354,18 +375,19 @@ def escribir_prestamo(
     )
     count: int = 0
     for i in fiadores:
-        deudas_de_el_fiador: int = int(df["deudas por fiador"][i])
-        deudas_de_el_fiador += deudas_fiadores[count]
-        df.loc[i, "deudas por fiador"] = deudas_de_el_fiador
+        if i != 1976:
+            deudas_de_el_fiador: int = int(df["deudas por fiador"][i])
+            deudas_de_el_fiador += deudas_fiadores[count]
+            df.loc[i, "deudas por fiador"] = deudas_de_el_fiador
 
-        fiador_de: str = df["fiador de"][i]
-        if fiador_de == "n":
-            fiador_de = str(index)
-        else:
-            fiador_de += f"_{index}"
-        df.loc[i, "fiador de"] = fiador_de
+            fiador_de: str = df["fiador de"][i]
+            if fiador_de == "n":
+                fiador_de = str(index)
+            else:
+                fiador_de += f"_{index}"
+            df.loc[i, "fiador de"] = fiador_de
 
-        count += 1
+            count += 1
 
     prestamos_hechos: int = int(df["prestamos hechos"][index])
     prestamos_hechos += 1

@@ -34,6 +34,9 @@ if "usuario_actual_ver" not in st.session_state:
 if "usuario_actual_rifas" not in st.session_state:
     st.session_state.usuario_actual_rifas = -1
 
+if "usuario_actual_analis" not in st.session_state:
+    st.session_state.usuario_actual_analis = -1
+
 if "ranura_actual" not in st.session_state:
     st.session_state.ranura_actual = "1"
 
@@ -59,6 +62,11 @@ paginas_generales: list = [
         "paginas/Prestamos.py",
         title="Prestamos",
         icon="💵"
+    ),
+    st.Page(
+      "paginas/AnalisUsuarios.py",
+        title="Analizar Ususarios",
+        icon="📈"
     ),
     st.Page(
         "paginas/Rifas.py",

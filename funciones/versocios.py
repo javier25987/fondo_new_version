@@ -1,3 +1,5 @@
+import datetime
+
 def ingresar_usuario(index: int, ajustes: dict, df) -> (bool, str):
     if 0 <= index < ajustes["usuarios"]:
         if df["estado"][index] == "activo":
@@ -22,6 +24,8 @@ def realizar_anotacion(
     elif anotacion == "":
         return False, "La anotacion esta vacia"
     else:
+        anotacion = f"({datetime.datetime.now().strftime("%Y/%m/%d // %H-%M")}) " \
+            + anotacion
         anotacion += f": $ {monto}"
         if anotaciones == "n":
             anotaciones = anotacion
@@ -69,6 +73,7 @@ def modificar_anotacion(
         df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
         df.to_csv(ajustes["nombre df"])
         return True, ""
+
 
 def buscar_boleta(
         df, rifa_a_buscar: str, boleta_a_buscar: str, poscion_boleta: int

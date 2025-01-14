@@ -14,14 +14,15 @@
 
 ## Secciones finalizadas
 
-* [X] arranque
-* [X] menu
-* [X] cuotas
-* [X] prestamos
-* [ ] rifas
-* [X] ver socios
-* [X] ajustes
-* [X] modificar socios
+* [X]  arranque
+* [X]  menu
+* [X]  cuotas
+* [X]  prestamos
+* [ ]  rifas
+* [X]  ver socios
+* [X]  ajustes
+* [X]  modificar socios
+* [ ]  analizar usuarios
 
 ## Errores de el programa
 
@@ -44,6 +45,17 @@ los conflictos de un merge automaticamente
     )
 """
 ```
+
+## Datos a tener en cuenta para mostara en la tabla
+
+* cuanto ha pagado
+* cuotas que tiene pagas
+* cunto ha pagado en multas
+* multas adeudas
+* prestamos activos
+* dinero pagado en intereses
+* deuda de prestamos activos
+*
 
 ## Agradecimiento
 
