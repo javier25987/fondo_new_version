@@ -55,7 +55,6 @@ los conflictos de un merge automaticamente
 * prestamos activos
 * dinero pagado en intereses
 * deuda de prestamos activos
-*
 
 ## Agradecimiento
 

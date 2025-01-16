@@ -1,7 +1,9 @@
 import funciones.cuotas as fc
 import datetime
 
-def obtener_estado_de_cuenta(index: int, df):
+def obtener_estado_de_cuenta(
+    index: int, prestamos_activos: int, deudas_de_prestamos: int, df
+):
     ahora = datetime.datetime.now().strftime("%Y/%m/%d %H:%M")
 
     formato = [
@@ -25,11 +27,13 @@ def obtener_estado_de_cuenta(index: int, df):
         f"Prestamos:\n",
         f"- Prestamos solitados: {df["prestamos hechos"][index]}\n",
         f"- Dinero retirado en prestamos: {df["dinero en prestamos"][index]:,}\n",
+        f"- Prestamos activos: {prestamos_activos}\n",
+        f"- Deudas en prestamos: {deudas_de_prestamos:,}\n"
         f"\n",
         f"- Deudas por fiador: {df["deudas por fiador"][index]:,}\n",
         f"- Fiador de: {df["fiador de"][index]}\n"
     ]
 
-    with open("text/estado_de_cuenta.txt", "w", encoding="utf-9") as f:
+    with open("text/estado_de_cuenta.txt", "w", encoding="utf-8") as f:
         f.write("".join(formato))
         f.close()
