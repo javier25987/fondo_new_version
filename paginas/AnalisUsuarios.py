@@ -113,7 +113,6 @@ with tabs[1]:
                 df[f"p{i} prestamo"][index].split("_")[3]
             )
 
-
         usuario_options: list[str] = [
             "Cuotas pagas", "Cuotas que se deben", "Multas pendientes",
             "Estado", "Capital", "Dinero pagado en multas", "Multas extra",
@@ -124,21 +123,24 @@ with tabs[1]:
         usuario_values: list[int | str] = [
             df["cuotas"][index].count("p"), df["cuotas"][index].count("d"),
             fc.contar_multas(df["multas"][index]), df["estado"][index],
-            int(df["capital"][index]), int(df["aporte a multas"][index]),
-            int(df["multas extra"][index]), df["prestamos hechos"][index],
-            int(df["dinero en prestamos"][index]), prestamos_activos,
-            int(deudas_de_prestamos), df["deudas por fiador"][index],
+            df["capital"][index], df["aporte a multas"][index],
+            df["multas extra"][index], df["prestamos hechos"][index],
+            df["dinero en prestamos"][index], prestamos_activos,
+            deudas_de_prestamos, df["deudas por fiador"][index],
             df["fiador de"][index]
         ]
+
+        def funct(x: int | str) -> str:
+            try:
+                return f"{int(x):,}"
+            except ValueError:
+                return x
 
         st.table(
             pd.DataFrame(
                 {
                     "Concepto": usuario_options,
-                    "valor": [
-                        f"{x:,}" if isinstance(x, int) else x
-                        for x in usuario_values
-                    ]
+                    "valor": [ funct(x) for x in usuario_values ]
                 }
             )
         )
