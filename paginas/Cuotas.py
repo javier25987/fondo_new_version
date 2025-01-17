@@ -4,6 +4,8 @@ import streamlit as st
 import pandas as pd
 import os
 
+from funciones.cuotas import escribir_cuotas_y_multas
+
 ajustes: dict = fg.abrir_ajustes()
 banco: dict = fg.abrir_banco()
 df = pd.read_csv(ajustes["nombre df"])
@@ -54,15 +56,17 @@ else:
         )
 
         st.divider()
+        escribir_cuotas_y_multas(index, ajustes, df)
+        st.divider()
 
-        df1, df2 = fc.tablas_para_cuotas_y_multas(index, ajustes, df)
-        col2_1, col2_2 = st.columns(2)
-
-        with col2_1:
-            st.table(df1)
-
-        with col2_2:
-           st.table(df2)
+        # df1, df2 = fc.tablas_para_cuotas_y_multas(index, ajustes, df)
+        # col2_1, col2_2 = st.columns(2)
+        #
+        # with col2_1:
+        #     st.table(df1)
+        #
+        # with col2_2:
+        #    st.table(df2)
 
         numero_cuotas_a_pagar: int = 50 - df["cuotas"][index].count("p")
 
@@ -71,31 +75,32 @@ else:
 
         numero_multas_a_pagar: int = fc.contar_multas(df["multas"][index])
 
-        cuotas_a_pagar: int = st.selectbox(
-            "Numero de cuotas a pagar:",
-            range(numero_cuotas_a_pagar + 1)
-        )
-        multas_a_pagar: int = st.selectbox(
-            "Numero de multas a pagar:",
-            range(numero_multas_a_pagar + 1)
-        )
+        cols_1 = st.columns(2)
 
-        cols_0_1 = st.columns(2)
-        with cols_0_1[0]:
+        with cols_1[0]:
+            cuotas_a_pagar: int = st.selectbox(
+                "Numero de cuotas a pagar:",
+                range(numero_cuotas_a_pagar + 1)
+            )
+
             tesorero_a_pagar: str = st.selectbox(
                 "Tesorero:",
                 ("1", "2", "3", "4")
             )
 
-        with cols_0_1[1]:
+        with cols_1[1]:
+            multas_a_pagar: int = st.selectbox(
+                "Numero de multas a pagar:",
+                range(numero_multas_a_pagar + 1)
+            )
+
             modo_de_pago: str = st.selectbox(
                 "Modo de pago:",
                 ("Efecctivo", "Transferencia")
             )
+            st.divider()
 
-        col3_1, col3_2 = st.columns(2)
-
-        if col3_1.button("Iniciar proceso de pago"):
+        if cols_1[0].button("Iniciar proceso de pago"):
             if cuotas_a_pagar == 0 and multas_a_pagar == 0:
                 st.error(
                     "No se que desea pagar",
@@ -108,7 +113,9 @@ else:
                     tesorero_a_pagar, modo_de_pago ,ajustes,
                     banco, df
                 )
-        if col3_2.button("Abrir ultimo cheque"):
+
+        st.divider()
+        if st.button("Abrir ultimo cheque"):
             with st.spinner("Abriendo cheque..."):
                 os.system("notepad.exe text/cheque_de_cuotas.txt")
 

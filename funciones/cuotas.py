@@ -447,3 +447,43 @@ def buscar_transferencia(index: int, banco: dict) -> dict:
     return resultado
 
 
+def escribir_cuotas_y_multas(index: int, ajustes: dict, df):
+
+    funct = lambda x: " " if x == "n" else x
+
+    general_list: list[list[str]] = [
+        list(  # numero
+            map(str, range(1, 51))
+        ), list( # fecha
+            map(
+                lambda x: x[:-3], ajustes["calendario"].split("_")
+            )
+        ),list( # cuotas
+            map(r_cuotas, list(df["cuotas"][index]))
+        ),list( # tesorero
+            map(funct, list(df["tesorero"][index]))
+        ),list( # multas
+            map(funct, list(df["multas"][index]))
+        )
+    ]
+
+    names_list: list[str] = [
+        "Cuota №", "Fechas", "Cuotas", "Tesorero", "Multas"
+    ]
+
+    cols_w = st.columns([0.49, 0.02, 0.49])
+    step: int = 0
+    for col in [cols_w[0], cols_w[2]]:
+        with col:
+            col_count: int = 0
+            for sub_col in st.columns(5):
+                with sub_col:
+                    st.markdown(f"**{names_list[col_count]}**")
+                    for i in range(25):
+                        st.markdown(f"{general_list[col_count][i + step]}")
+                    col_count += 1
+        step += 25
+
+    # with cols_w[1]:
+    #     for _ in range(26):
+    #         st.markdown("|")
