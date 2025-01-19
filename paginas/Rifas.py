@@ -66,8 +66,8 @@ else:
                     st.subheader("🚨 No se han entregado boletas")
                 else:
                     talonarios: list = fr.crear_tablas_talonarios(boletas)
-                    for l in talonarios:
-                        st.table(l)
+                    for l_boleta in talonarios:
+                        st.table(l_boleta)
             else:
                 st.title("Rifas")
                 st.title("🚨 La rifa no esta activa")

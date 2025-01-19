@@ -82,7 +82,7 @@ try:
     with open("ajustes.json", "r") as f:
         f.close()
     st.session_state.ajustes_exist = True
-except:
+except FileExistsError:
     pass
 
 # revisar si existe banco
@@ -90,7 +90,7 @@ try:
     with open("banco.json", "r") as f:
         f.close()
     st.session_state.banco_exist = True
-except:
+except FileExistsError:
     pass
 
 # revisar si esiste la tabla
@@ -102,7 +102,7 @@ try:
     df = pd.read_csv(ajustes["nombre df"])
 
     st.session_state.df_exist = True
-except:
+except FileExistsError:
     pass
 
 general_control: bool = (

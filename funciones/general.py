@@ -113,7 +113,7 @@ def crear_tabla_principal() -> None:
 
         try:
             open(nombre)
-        except:
+        except FileExistsError:
             df = pd.DataFrame(
                 {
                     # informacion general
@@ -201,7 +201,7 @@ def crear_tabla_principal() -> None:
                 }
             )
             df.to_csv(nombre)
-    except:
+    except FileExistsError:
         st.error("No se encuentran los ajustes", icon="🚨")
 
 

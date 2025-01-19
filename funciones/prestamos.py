@@ -274,7 +274,7 @@ def calendario_de_meses(fecha_de_cierre: str) -> str:
                 )
                 ahora = temporal_ahora
                 break
-            except:
+            except ValueError:
                 dias_uso -= 1
 
         if ahora < fecha_de_cierre:
