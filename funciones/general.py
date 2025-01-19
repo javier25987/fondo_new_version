@@ -82,16 +82,13 @@ def crear_ajustes_de_el_programa() -> None:
         "r4 boletas por talonario": 0,
         "r4 costos de administracion": 0,
         "r4 ganancia por boleta": 0,
-        "r4 fecha de cierre": ""
+        "r4 fecha de cierre": "",
     }
     guardar_ajustes(ajustes)
 
 
 def crear_banco():
-    banco: dict = {
-        "dinero pagado": 0,
-        "id": 0
-    }
+    banco: dict = {"dinero pagado": 0, "id": 0}
     with open("banco.json", "w") as f:
         json.dump(banco, f)
         f.close()
@@ -101,8 +98,13 @@ def crear_tabla_principal() -> None:
     try:
         ajustes: dict = abrir_ajustes()
 
-        nombre: str = "FONDO_" + str(ajustes["numero de creacion"]) + \
-        "_" + datetime.datetime.now().strftime("%Y") + ".csv"
+        nombre: str = (
+            "FONDO_"
+            + str(ajustes["numero de creacion"])
+            + "_"
+            + datetime.datetime.now().strftime("%Y")
+            + ".csv"
+        )
 
         ajustes["numero de creacion"] += 1
         ajustes["nombre df"] = nombre
@@ -195,7 +197,7 @@ def crear_tabla_principal() -> None:
                     "p16 fechas de pago": [],
                     "deudas por fiador": [],
                     "fiador de": [],
-                    "anotaciones de prestamos": []
+                    "anotaciones de prestamos": [],
                 }
             )
             df.to_csv(nombre)
@@ -204,12 +206,7 @@ def crear_tabla_principal() -> None:
 
 
 def string_a_fecha(fecha: str):
-    return datetime.datetime(
-        *map(
-            int,
-            fecha.split("/")
-        )
-    )
+    return datetime.datetime(*map(int, fecha.split("/")))
 
 
 @st.dialog("🚨  Error!!  🚨")
@@ -224,29 +221,25 @@ def error_commit() -> None:
         
         > **NOTA:** Este proceso puede demorar un poco, por favor
         > espere 10 segundos
-        """   # , icon="🚨"
+        """  # , icon="🚨"
     )
 
     time.sleep(15)
 
 
 def ejecutar_comando_git(comando):
-    proceso = subprocess.Popen(
-        comando,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
-    )
+    proceso = subprocess.Popen(comando, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     salida, error = proceso.communicate()
 
     if proceso.returncode != 0:
-        print(f"Error: {error.decode("utf-8")}")
+        print(f"Error: {error.decode('utf-8')}")
         if "remote:" in error.decode("utf-8"):
             error_commit()
         if "fatal: unable to access" in error.decode("utf-8"):
             error_commit()
     else:
-        print(f"Salida: {salida.decode("utf-8")}")
+        print(f"Salida: {salida.decode('utf-8')}")
 
 
 @st.dialog("🚨 Advertencia 🚨")
@@ -256,8 +249,4 @@ def advertencia():
         " ingresar como administrador, de lo contrario no sera"
         " posible."
     )
-    st.page_link(
-        "session/login.py",
-        label="Ingresar",
-        icon=":material/login:"
-    )
+    st.page_link("session/login.py", label="Ingresar", icon=":material/login:")

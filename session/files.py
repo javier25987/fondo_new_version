@@ -3,7 +3,7 @@ import streamlit as st
 
 st.header("Creacion de archivos elementales")
 st.markdown(
-    f"""
+    """
         > **NOTA:** En caso de haber creado el archivo de ajustes ingrese al
         modo administrador y dirijase a la seccion 'ajustes', aqui configure
         todo lo necesario para el programa.

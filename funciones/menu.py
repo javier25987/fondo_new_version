@@ -36,19 +36,15 @@ def hacer_commit(ajustes: dict) -> None:
         ahora = datetime.datetime.now()
         fecha_hora_str = ahora.strftime("%Y-%m-%d_%H:%M:%S")
         ajustes["commits hechos"] += 1
-        mensaje_de_comit = f"{ajustes["commits hechos"]}_{fecha_hora_str}"
+        mensaje_de_comit = f"{ajustes['commits hechos']}_{fecha_hora_str}"
         fg.ejecutar_comando_git(["git", "commit", "-m", mensaje_de_comit])
 
         st.write("Guardando en GitHub ...")
-        fg.ejecutar_comando_git(
-            ["git", "push"]
-        )
+        fg.ejecutar_comando_git(["git", "push"])
 
         fg.guardar_ajustes(ajustes)
         status.update(
-            label="Los datos han sido cargados!",
-            state="complete",
-            expanded=False
+            label="Los datos han sido cargados!", state="complete", expanded=False
         )
         time.sleep(1)
         st.rerun()

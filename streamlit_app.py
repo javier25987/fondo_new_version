@@ -48,36 +48,12 @@ if "buscar_banco" not in st.session_state:
 
 # paginas de usuario general
 paginas_generales: list = [
-    st.Page(
-        "paginas/Menu.py",
-        title="Menu",
-        icon="🏠"
-    ),
-    st.Page(
-        "paginas/Cuotas.py",
-        title="Cuotas",
-        icon="📆"
-    ),
-    st.Page(
-        "paginas/Prestamos.py",
-        title="Prestamos",
-        icon="💵"
-    ),
-    st.Page(
-      "paginas/AnalisUsuarios.py",
-        title="Analizar Ususarios",
-        icon="📈"
-    ),
-    st.Page(
-        "paginas/Rifas.py",
-        title="Rifas",
-        icon="🗒️"
-    ),
-    st.Page(
-        "paginas/VerSocios.py",
-    title = "Ver Usuarios",
-    icon = "🔎"
-    )
+    st.Page("paginas/Menu.py", title="Menu", icon="🏠"),
+    st.Page("paginas/Cuotas.py", title="Cuotas", icon="📆"),
+    st.Page("paginas/Prestamos.py", title="Prestamos", icon="💵"),
+    st.Page("paginas/AnalisUsuarios.py", title="Analizar Ususarios", icon="📈"),
+    st.Page("paginas/Rifas.py", title="Rifas", icon="🗒️"),
+    st.Page("paginas/VerSocios.py", title="Ver Usuarios", icon="🔎"),
 ]
 
 # paginas de el modo administardor
@@ -87,34 +63,18 @@ paginas_de_adiministrador: list = [
         title="Modificar Usuarios",
         icon="📖",
     ),
-    st.Page(
-        "administrador/Ajustes.py",
-        title="Ajustes",
-        icon="⚙️"
-    ),
-    st.Page(
-        "session/logout.py",
-        title="Salir",
-        icon=":material/logout:"
-    )
+    st.Page("administrador/Ajustes.py", title="Ajustes", icon="⚙️"),
+    st.Page("session/logout.py", title="Salir", icon=":material/logout:"),
 ]
 
 # pagina para ingresar como administrador
 ingresar_admin: list = [
-    st.Page(
-        "session/login.py",
-        title="Ingresar",
-        icon=":material/login:"
-    )
+    st.Page("session/login.py", title="Ingresar", icon=":material/login:")
 ]
 
 # pagina para crear los archivos
 archivos_elementales: list = [
-    st.Page(
-        "session/files.py",
-        title="Crear Archivos",
-        icon=":material/settings:"
-    )
+    st.Page("session/files.py", title="Crear Archivos", icon=":material/settings:")
 ]
 
 # revisar si existen los ajustes
@@ -146,9 +106,9 @@ except:
     pass
 
 general_control: bool = (
-    st.session_state.ajustes_exist and
-    st.session_state.df_exist and
-    st.session_state.banco_exist
+    st.session_state.ajustes_exist
+    and st.session_state.df_exist
+    and st.session_state.banco_exist
 )
 
 # diccionario de paginas que se van a mostrar

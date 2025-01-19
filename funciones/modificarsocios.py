@@ -5,8 +5,7 @@ import time
 
 
 def insertar_socios(
-        ajustes:dict, df, nombre: str = "",
-        puestos: int = 1, numero_celular: str = ""
+    ajustes: dict, df, nombre: str = "", puestos: int = 1, numero_celular: str = ""
 ):
     if numero_celular == "":
         numero_celular = "n"
@@ -26,9 +25,9 @@ def insertar_socios(
             "multas extra": [0],
             "anotaciones generales": ["n"],
             # cuotas
-            "cuotas": ["n"*50],
-            "multas": ["n"*50],
-            "tesorero": ["n"*50],
+            "cuotas": ["n" * 50],
+            "multas": ["n" * 50],
+            "tesorero": ["n" * 50],
             "revisiones": [0],
             "anotaciones de cuotas": ["n"],
             # rifas
@@ -96,10 +95,10 @@ def insertar_socios(
             "p16 fechas de pago": ["n"],
             "deudas por fiador": [0],
             "fiador de": ["n"],
-            "anotaciones de prestamos": ["n"]
+            "anotaciones de prestamos": ["n"],
         }
     )
-    df = pd.concat([df, nuevo_usuario], ignore_index = True)
+    df = pd.concat([df, nuevo_usuario], ignore_index=True)
     df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
     df.to_csv(ajustes["nombre df"])
 
@@ -110,8 +109,7 @@ def insertar_socios(
 
 @st.dialog("Añadir un nuevo usuario:")
 def menu_para_insertar_socio(
-        ajustes: dict, df, nombre: str = "",
-        puestos: int = 0, telefono: str = ""
+    ajustes: dict, df, nombre: str = "", puestos: int = 0, telefono: str = ""
 ) -> None:
     cols = st.columns([7, 3], vertical_alignment="bottom")
 
@@ -125,18 +123,13 @@ def menu_para_insertar_socio(
 
     with cols[1]:
         if st.button("Añadir", key="nosequeputas"):
-            insertar_socios(
-                ajustes, df, nombre, puestos, telefono
-            )
+            insertar_socios(ajustes, df, nombre, puestos, telefono)
             st.toast("Nuevo usuario añadido", icon="🎉")
             time.sleep(1.5)
             st.rerun()
 
 
-def modificar_columna(
-        index: int, columna: str, nuevo: str | int,
-        ajustes: dict, df
-):
+def modificar_columna(index: int, columna: str, nuevo: str | int, ajustes: dict, df):
     df.loc[index, columna] = nuevo
     df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
     df.to_csv(ajustes["nombre df"])
@@ -151,19 +144,14 @@ def sumar_multas(s, n) -> str:
             diferencia = 9 - s[i]
             if n - diferencia > 0:
                 n -= diferencia
-                s[i] =  9
+                s[i] = 9
             else:
                 s[i] += n
                 n = 0
         if n <= 0:
             break
 
-    return "".join(
-        map(
-            lambda x: "n" if x == 0 else str(x),
-            s
-        )
-    )
+    return "".join(map(lambda x: "n" if x == 0 else str(x), s))
 
 
 def restar_multas(s, n) -> str:
@@ -180,12 +168,7 @@ def restar_multas(s, n) -> str:
         if n <= 0:
             break
 
-    return "".join(
-        map(
-            lambda x: "n" if x == 0 else str(x),
-            s
-        )
-    )
+    return "".join(map(lambda x: "n" if x == 0 else str(x), s))
 
 
 def contar_multas(index: int, df):

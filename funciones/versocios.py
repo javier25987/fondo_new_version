@@ -1,5 +1,6 @@
 import datetime
 
+
 def ingresar_usuario(index: int, ajustes: dict, df) -> (bool, str):
     if 0 <= index < ajustes["usuarios"]:
         if df["estado"][index] == "activo":
@@ -24,8 +25,9 @@ def realizar_anotacion(
     elif anotacion == "":
         return False, "La anotacion esta vacia"
     else:
-        anotacion = f"({datetime.datetime.now().strftime("%Y/%m/%d // %H-%M")}) " \
-            + anotacion
+        anotacion = (
+            f"({datetime.datetime.now().strftime('%Y/%m/%d // %H-%M')}) " + anotacion
+        )
         anotacion += f": $ {monto}"
         if anotaciones == "n":
             anotaciones = anotacion
@@ -37,8 +39,8 @@ def realizar_anotacion(
 
         multas_actuales += monto
 
-        df.loc[index, f"anotaciones generales"] = anotaciones
-        df.loc[index, f"multas extra"] = multas_actuales
+        df.loc[index, "anotaciones generales"] = anotaciones
+        df.loc[index, "multas extra"] = multas_actuales
 
         df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
         df.to_csv(ajustes["nombre df"])
@@ -46,10 +48,7 @@ def realizar_anotacion(
         return True, ""
 
 
-def modificar_anotacion(
-        index: int, pos: int, new_elem: str,
-        ajustes: dict, df
-):
+def modificar_anotacion(index: int, pos: int, new_elem: str, ajustes: dict, df):
     anotaciones: str = df["anotaciones generales"][index]
     anotaciones: list[str] = anotaciones.split("_")
 
@@ -61,7 +60,7 @@ def modificar_anotacion(
         return False, "El simbolo ':' no puede estar en la anotacion"
     else:
         anotacion: str = anotaciones[pos]
-        monto: str = anotacion[anotacion.find(":"):]
+        monto: str = anotacion[anotacion.find(":") :]
         if new_elem == "":
             anotaciones[pos] = "n" + monto
         else:
@@ -69,15 +68,13 @@ def modificar_anotacion(
 
         anotaciones = "_".join(anotaciones)
 
-        df.loc[index, f"anotaciones generales"] = anotaciones
+        df.loc[index, "anotaciones generales"] = anotaciones
         df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
         df.to_csv(ajustes["nombre df"])
         return True, ""
 
 
-def buscar_boleta(
-        df, rifa_a_buscar: str, boleta_a_buscar: str, poscion_boleta: int
-):
+def buscar_boleta(df, rifa_a_buscar: str, boleta_a_buscar: str, poscion_boleta: int):
     tabla_prueva = df[
         df[f"r{rifa_a_buscar} boletas"].str.contains(
             boleta_a_buscar, case=False, na=False
@@ -96,12 +93,10 @@ def buscar_boleta(
         new_objetos: list = []
 
         for n in objetos:
-            new_objetos += [
-                m.split("?") for m in n.split("#")
-            ]
+            new_objetos += [m.split("?") for m in n.split("#")]
 
         for k in new_objetos:
             if k[poscion_boleta - 1] == boleta_a_buscar:
                 return i
 
-    return -1 # esto solo se activa si hay algun error
+    return -1  # esto solo se activa si hay algun error

@@ -13,16 +13,16 @@ def abrir_usuario(index: int, ajustes: dict, df) -> (bool, str):
         return False, "El numero de usuario esta fuera de rango"
 
 
-@st.dialog('Entrega de talonario')
+@st.dialog("Entrega de talonario")
 def cargar_talonario(index: int, rifa: str, ajustes: dict, df):
-    st.header(f'№ {df['numero'][index]}: {df['nombre'][index].title()}')
+    st.header(f"№ {df['numero'][index]}: {df['nombre'][index].title()}")
     st.divider()
 
     columnas: int = ajustes[f"r{rifa} numeros por boleta"]
     filas: int = ajustes[f"r{rifa} boletas por talonario"]
 
-    l_col: list[str] = [str(i) for i in range(1, columnas+1)]
-    l_fil: list[str] = [str(i) for i in range(1, filas+1)]
+    l_col: list[str] = [str(i) for i in range(1, columnas + 1)]
+    l_fil: list[str] = [str(i) for i in range(1, filas + 1)]
 
     for i in l_fil:
         st.write(f"Boleta № {i} de el talonario:")
@@ -63,19 +63,16 @@ def cargar_talonario(index: int, rifa: str, ajustes: dict, df):
 
 
 @st.dialog("Pago de boletas")
-def pago_de_boletas(
-        index: int, pago: int, rifa: str, ajustes: dict, df
-):
-
+def pago_de_boletas(index: int, pago: int, rifa: str, ajustes: dict, df):
     pago_anotacion: int = pago
 
-    st.header(f"№ {df["numero"][index]}: {df["nombre"][index].title()}")
+    st.header(f"№ {df['numero'][index]}: {df['nombre'][index].title()}")
     st.divider()
 
     deuda_act = df[f"r{rifa} deudas"][index]
 
-    st.write(f"Deuda por boletas: {"{:,}".format(deuda_act)}")
-    st.write(f"Pago que se realiza: {"{:,}".format(pago)}")
+    st.write(f"Deuda por boletas: {deuda_act:,}")
+    st.write(f"Pago que se realiza: {pago:,}")
     st.divider()
 
     if st.button("Aceptar pago"):
@@ -83,7 +80,7 @@ def pago_de_boletas(
         df.loc[index, f"r{rifa} deudas"] = deuda_act
 
         anotacion: str = (
-            f" ( {datetime.datetime.now().strftime("%Y/%m/%d - %H:%M")} ) "
+            f" ( {datetime.datetime.now().strftime('%Y/%m/%d - %H:%M')} ) "
             f"Se pago {pago_anotacion:,} pesos en talonarios de la rifa № "
             f"{rifa}."
         )
@@ -97,27 +94,17 @@ def crear_tablas_talonarios(boletas: str):
     talonarios: list = boletas.split("_")
     lista_r: list = []
     for i in talonarios:
-        i_b = list(
-            map(
-                lambda x: x.split("?"),
-                i.split("#")
-            )
-        )
+        i_b = list(map(lambda x: x.split("?"), i.split("#")))
         dict_t: dict = dict()
 
-        dict_t["Boletas"] = [
-            f"Boleta № {k + 1}"
-            for k in range(len(i_b))
-        ]
+        dict_t["Boletas"] = [f"Boleta № {k + 1}" for k in range(len(i_b))]
 
         i_b = list(map(list, zip(*i_b)))
 
         for j in range(len(i_b)):
-            dict_t[f'№ {j + 1}'] = i_b[j]
+            dict_t[f"№ {j + 1}"] = i_b[j]
 
-        lista_r.append(
-            pd.DataFrame(dict_t)
-        )
+        lista_r.append(pd.DataFrame(dict_t))
 
     return lista_r
 
@@ -138,7 +125,7 @@ def realizar_anotacion(
             anotacion = "_" + anotacion
             anotaciones += anotacion
 
-        df.loc[index, f"anotaciones de rifas"] = anotaciones
+        df.loc[index, "anotaciones de rifas"] = anotaciones
 
         df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
         df.to_csv(ajustes["nombre df"])
@@ -156,30 +143,25 @@ def eliminar_anotacion(index: int, pos: int, ajustes: dict, df):
         anotaciones.pop(pos)
         anotaciones = "_".join(anotaciones)
 
-    df.loc[index, f"anotaciones de rifas"] = anotaciones
+    df.loc[index, "anotaciones de rifas"] = anotaciones
     df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
     df.to_csv(ajustes["nombre df"])
 
 
-def modificar_anotacion(
-        index: int, pos: int, new_elem: str, ajustes: dict, df
-):
+def modificar_anotacion(index: int, pos: int, new_elem: str, ajustes: dict, df):
     anotaciones: str = df["anotaciones de rifas"][index]
     anotaciones: list[str] = anotaciones.split("_")
 
     if new_elem == "":
         anotaciones[pos] = "n"
     elif "_" in new_elem:
-        st.error(
-            "El simbolo '_' no puede estar en la anotacion",
-            icon="🚨"
-        )
+        st.error("El simbolo '_' no puede estar en la anotacion", icon="🚨")
         return 0
     else:
         anotaciones[pos] = new_elem
 
     anotaciones = "_".join(anotaciones)
 
-    df.loc[index, f"anotaciones de rifas"] = anotaciones
+    df.loc[index, "anotaciones de rifas"] = anotaciones
     df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
     df.to_csv(ajustes["nombre df"])

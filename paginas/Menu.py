@@ -7,7 +7,7 @@ ajustes: dict = fg.abrir_ajustes()
 st.title("Menu de inicio")
 
 st.markdown(
-        """
+    """
         Honestamente ya no se que hace con el menu, lo voy a dejar 
         para almacenar las funciones de guardado en internet y 
         cargar las multas a todos ya que no se donde poner eso, pero 
@@ -30,7 +30,7 @@ with col1:
 with col2:
     st.header("Cargar multas")
     st.markdown(
-            """
+        """
             Esta parte esta dedicada a cargar las multas para todos los 
             usuarios de el programa haciendo que a los usuarios que no 
             pagaron se les sume la multa de la semana correspondiente.

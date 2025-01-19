@@ -17,20 +17,11 @@ clave: str = st.text_input("Contraseña de administrador:")
 
 if st.button("Ingresar"):
     if clave == ajustes["clave de acceso"]:
-        st.toast(
-            "Ha obtenido acceso de administador",
-            icon="🎉"
-        )
+        st.toast("Ha obtenido acceso de administador", icon="🎉")
         st.session_state.admin = True
         time.sleep(1)
         st.rerun()
     elif clave == "":
-        st.error(
-            "La contraseña esta vacia",
-            icon="🚨"
-        )
+        st.error("La contraseña esta vacia", icon="🚨")
     else:
-        st.error(
-            "La contraseña es incorrecta",
-            icon="🚨"
-        )
+        st.error("La contraseña es incorrecta", icon="🚨")

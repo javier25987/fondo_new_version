@@ -38,77 +38,56 @@ def guardar_y_avisar(ajustes: dict, rerun: bool = True):
         st.rerun()
 
 
-def crear_tablas_rifas(ajustes:dict, rifa: str) -> list:
+def crear_tablas_rifas(ajustes: dict, rifa: str) -> list:
     return [
         pd.DataFrame(
             {
                 "Numero de boletas": [
-                    "{:,}".format(
-                        ajustes[f"r{rifa} numero de boletas"]
-                    )
+                    "{:,}".format(ajustes[f"r{rifa} numero de boletas"])
                 ],
-                "Numeros por boleta": [
-                    str(
-                        ajustes[f"r{rifa} numeros por boleta"]
-                    )
-                ],
+                "Numeros por boleta": [str(ajustes[f"r{rifa} numeros por boleta"])],
                 "Boletas por talonario": [
-                    str(
-                        ajustes[f"r{rifa} boletas por talonario"]
-                    )
-                ]
+                    str(ajustes[f"r{rifa} boletas por talonario"])
+                ],
             }
-        ), pd.DataFrame(
+        ),
+        pd.DataFrame(
             {
                 "Costo por boleta": [
-                    "{:,}".format(
-                        ajustes[f"r{rifa} costo de boleta"]
-                    )
+                    "{:,}".format(ajustes[f"r{rifa} costo de boleta"])
                 ],
                 "Costos de administracion": [
-                    "{:,}".format(
-                        ajustes[f"r{rifa} costos de administracion"]
-                    )
+                    "{:,}".format(ajustes[f"r{rifa} costos de administracion"])
                 ],
                 "Ganancias por boleta": [
-                    "{:,}".format(
-                        ajustes[f"r{rifa} ganancia por boleta"]
-                    )
-                ]
+                    "{:,}".format(ajustes[f"r{rifa} ganancia por boleta"])
+                ],
             }
-        ), pd.DataFrame(
-            {
-                "Fecha de cierre": [
-                    str(
-                        ajustes[f"r{rifa} fecha de cierre"]
-                    )
-                ]
-            }
-        ), pd.DataFrame(
-            {
-                "Premios": str(
-                    ajustes[f"r{rifa} premios"]
-                ).split("_")
-            }
-        )
+        ),
+        pd.DataFrame({"Fecha de cierre": [str(ajustes[f"r{rifa} fecha de cierre"])]}),
+        pd.DataFrame({"Premios": str(ajustes[f"r{rifa} premios"]).split("_")}),
     ]
 
 
 def cargar_datos_de_rifa(
-        ajustes: dict, rifa: str, numero_de_boletas: int,
-        numeros_por_boleta: int, boletas_por_talonario: int,
-        costo_de_boleta: int, costo_de_administracion: int,
-        fecha_de_cierre, premios: list[int]
+    ajustes: dict,
+    rifa: str,
+    numero_de_boletas: int,
+    numeros_por_boleta: int,
+    boletas_por_talonario: int,
+    costo_de_boleta: int,
+    costo_de_administracion: int,
+    fecha_de_cierre,
+    premios: list[int],
 ) -> None:
     suma_de_premios = sum(premios)
-    ganancias_por_boleta = (numero_de_boletas * costo_de_boleta) \
-        - (costo_de_administracion + suma_de_premios)
+    ganancias_por_boleta = (numero_de_boletas * costo_de_boleta) - (
+        costo_de_administracion + suma_de_premios
+    )
     ganancias_por_boleta /= numero_de_boletas
     ganancias_por_boleta = int(ganancias_por_boleta)
 
-    premios = "_".join(
-        [str(i) for i in premios]
-    )
+    premios = "_".join([str(i) for i in premios])
 
     ajustes[f"r{rifa} numero de boletas"] = numero_de_boletas
     ajustes[f"r{rifa} numeros por boleta"] = numeros_por_boleta
@@ -117,7 +96,7 @@ def cargar_datos_de_rifa(
     ajustes[f"r{rifa} boletas por talonario"] = boletas_por_talonario
     ajustes[f"r{rifa} costos de administracion"] = costo_de_administracion
     ajustes[f"r{rifa} ganancia por boleta"] = ganancias_por_boleta
-    ajustes[f"r{rifa} fecha de cierre"] = fecha_de_cierre.strftime('%Y/%m/%d')
+    ajustes[f"r{rifa} fecha de cierre"] = fecha_de_cierre.strftime("%Y/%m/%d")
 
     fg.guardar_ajustes(ajustes)
     st.success("Datos cargados", icon="✅")
@@ -129,9 +108,7 @@ def cerrar_una_rifa(rifa: str, ajustes: dict):
     df = pd.read_csv(ajustes["nombre df"])
 
     if ajustes[f"r{rifa} estado"]:
-        fecha_de_cierre = fg.string_a_fecha(
-            ajustes[f"r{rifa} fecha de cierre"]
-        )
+        fecha_de_cierre = fg.string_a_fecha(ajustes[f"r{rifa} fecha de cierre"])
 
         if fecha_de_cierre < datetime.datetime.now():
             numeros = tuple(df["numero"])
@@ -139,15 +116,13 @@ def cerrar_una_rifa(rifa: str, ajustes: dict):
             deudas = tuple(df[f"r{rifa} deudas"])
 
             progres_text: str = "Rectificando deudas de usuarios ..."
-            func = lambda x: int(x*(100/len(numeros)))
+            func = lambda x: int(x * (100 / len(numeros)))
             bar = st.progress(0, text=progres_text)
 
             for i in range(len(nombres)):
                 if deudas[i] > 0:
                     fp.escribir_prestamo(
-                        numeros[i], "16",
-                        deudas[i], ajustes, df,
-                        [], []
+                        numeros[i], "16", deudas[i], ajustes, df, [], []
                     )
                     df.loc[numeros[i], f"r{rifa} deudas"] = 0
 
@@ -160,17 +135,11 @@ def cerrar_una_rifa(rifa: str, ajustes: dict):
             bar.empty()
             ajustes[f"r{rifa} estado"] = False
 
-            df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+            df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
             df.to_csv(ajustes["nombre df"])
 
             guardar_y_avisar(ajustes, rerun=False)
         else:
-            st.error(
-                "No se cumple la fecha de cierre",
-                icon="🚨"
-            )
+            st.error("No se cumple la fecha de cierre", icon="🚨")
     else:
-        st.error(
-            "La rifa no esta activa",
-            icon="🚨"
-        )
+        st.error("La rifa no esta activa", icon="🚨")
