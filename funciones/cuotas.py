@@ -109,23 +109,23 @@ def pagar_n_multas(s: str, n: int):
 
 
 def abrir_usuario(index: int, ajustes: dict, df) -> (bool, str):
-    if 0 <= index < ajustes["usuarios"]:
-        if df["estado"][index] == "activo":
-            arreglar_asuntos(index, ajustes, df)
-
-            df = pd.read_csv(ajustes["nombre df"])
-
-            if ajustes["anular usuarios"] and (df["multas"][index].count("n") < 47):
-                df.loc[index, "estado"] = "no activo"
-                df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
-                df.to_csv(st.session_state.nombre_df)
-                return False, "El usuario ha sido desactivado"
-            else:
-                return True, ""
-        else:
-            return False, f"El usuario № {index} no esta activo"
-    else:
+    if 0 > index >= ajustes["usuarios"]:
         return False, "El numero de usuario esta fuera de rango"
+
+    if df["estado"][index] != "activo":
+        return False, f"El usuario № {index} no esta activo"
+
+    arreglar_asuntos(index, ajustes, df)
+
+    df = pd.read_csv(ajustes["nombre df"])
+
+    if ajustes["anular usuarios"] and (df["multas"][index].count("n") < 47):
+        df.loc[index, "estado"] = "no activo"
+        df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+        df.to_csv(st.session_state.nombre_df)
+        return False, "El usuario ha sido desactivado"
+
+    return True, ""
 
 
 def r_cuotas(s: str) -> str:
@@ -325,21 +325,20 @@ def realizar_anotacion(
 
     if "_" in anotacion:
         return False, "El simbolo '_' no puede estar en la anotacion"
-    elif anotacion == "":
+    if anotacion == "":
         return False, "La anotacion esta vacia"
+
+    if anotaciones == "n":
+        anotaciones = anotacion
     else:
-        if anotaciones == "n":
-            anotaciones = anotacion
-        else:
-            anotacion = "_" + anotacion
-            anotaciones += anotacion
+        anotacion = "_" + anotacion
+        anotaciones += anotacion
 
-        df.loc[index, "anotaciones de cuotas"] = anotaciones
+    df.loc[index, "anotaciones de cuotas"] = anotaciones
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+    df.to_csv(ajustes["nombre df"])
 
-        df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
-        df.to_csv(ajustes["nombre df"])
-
-        return True, ""
+    return True, ""
 
 
 def eliminar_anotacion(index: int, pos: int, ajustes: dict, df):
@@ -384,10 +383,9 @@ def anotar_pago_por_banco(index: int, monto: int, banco: dict, df) -> None:
     }
 
     id_anotacion: str = f"ID: {index}_{banco['id']}"
+
     banco["id"] += 1
-
     banco[id_anotacion] = anotacion
-
     banco["dinero pagado"] += monto
 
     with open("banco.json", "w") as f:
@@ -441,7 +439,3 @@ def escribir_cuotas_y_multas(index: int, ajustes: dict, df):
                         st.markdown(f"{general_list[col_count][i + step]}")
                     col_count += 1
         step += 25
-
-    # with cols_w[1]:
-    #     for _ in range(26):
-    #         st.markdown("|")

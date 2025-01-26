@@ -5,16 +5,13 @@ import datetime
 
 
 def abrir_usuario(index: int, ajustes: dict, df) -> (bool, str):
-    if 0 <= index < ajustes["usuarios"]:
-        if df["estado"][index] == "activo":
-            return True, ""
-        else:
-            return (
-                False,
-                f"El usuario № {index} no esta activo",
-            )
-    else:
+    if 0 > index >= ajustes["usuarios"]:
         return False, "El numero de usuario esta fuera de rango"
+
+    if df["estado"][index] != "activo":
+        return False, "fEl usuario № {index} no esta activo",
+
+    return True, ""
 
 
 def crear_tablas_de_ranura(prestamo: str, fechas: str):
@@ -196,13 +193,8 @@ def hacer_carta_de_prestamo() -> None:
 
 
 def rectificar_viavilidad(
-    index: int,
-    ranura: str,
-    valor: int,
-    ajustes: dict,
-    df,
-    fiadores: list[int] = list,
-    deudas_con_fiadores: list[int] = list,
+    index: int, ranura: str, valor: int, ajustes: dict, df,
+    fiadores: list[int] = list, deudas_con_fiadores: list[int] = list,
 ) -> (bool, str):
     # truco para saltarse toda la rectificacion del prestamo
     if len(fiadores) == 1:

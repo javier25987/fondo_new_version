@@ -4,13 +4,12 @@ import datetime
 
 
 def abrir_usuario(index: int, ajustes: dict, df) -> (bool, str):
-    if 0 <= index < ajustes["usuarios"]:
-        if df["estado"][index] == "activo":
-            return True, ""
-        else:
-            return False, f"El usuario № {index} no esta activo"
-    else:
+    if 0 > index >= ajustes["usuarios"]:
         return False, "El numero de usuario esta fuera de rango"
+    if df["estado"][index] != "activo":
+        return False, f"El usuario № {index} no esta activo"
+
+    return True, ""
 
 
 @st.dialog("Entrega de talonario")
@@ -116,21 +115,21 @@ def realizar_anotacion(
 
     if "_" in anotacion:
         return False, "El simbolo '_' no puede estar en la anotacion"
-    elif anotacion == "":
+    if anotacion == "":
         return False, "La anotacion esta vacia"
+
+    if anotaciones == "n":
+        anotaciones = anotacion
     else:
-        if anotaciones == "n":
-            anotaciones = anotacion
-        else:
-            anotacion = "_" + anotacion
-            anotaciones += anotacion
+        anotacion = "_" + anotacion
+        anotaciones += anotacion
 
-        df.loc[index, "anotaciones de rifas"] = anotaciones
+    df.loc[index, "anotaciones de rifas"] = anotaciones
 
-        df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
-        df.to_csv(ajustes["nombre df"])
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+    df.to_csv(ajustes["nombre df"])
 
-        return True, ""
+    return True, ""
 
 
 def eliminar_anotacion(index: int, pos: int, ajustes: dict, df):

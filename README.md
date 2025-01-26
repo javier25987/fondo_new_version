@@ -11,6 +11,8 @@
 ## Deuda tecnica
 
 * algoritmo para identificar boletas repetidas (seccion de rifas)
+* hacer que las multas generales se sumen a la columna de multas
+* hacer que el truco para saltarse la rectificacion de prestamos funcione con mas gente
 
 ## Secciones finalizadas
 
@@ -22,7 +24,7 @@
 * [X]  ver socios
 * [X]  ajustes
 * [X]  modificar socios
-* [ ]  analizar usuarios
+* [X]  analizar usuarios
 
 ## Errores de el programa
 

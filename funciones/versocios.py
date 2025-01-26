@@ -2,13 +2,13 @@ import datetime
 
 
 def ingresar_usuario(index: int, ajustes: dict, df) -> (bool, str):
-    if 0 <= index < ajustes["usuarios"]:
-        if df["estado"][index] == "activo":
-            return True, ""
-        else:
-            return False, f"El usuario № {index} esta desactivado"
-    else:
+    if 0 > index >= ajustes["usuarios"]:
         return False, "Numero de usuario fuera de rango"
+
+    if df["estado"][index] != "activo":
+        return False, f"El usuario № {index} esta desactivado"
+
+    return True, ""
 
 
 def realizar_anotacion(
@@ -18,34 +18,34 @@ def realizar_anotacion(
 
     if "_" in anotacion:
         return False, "El simbolo '_' no puede estar en la anotacion"
-    elif "$" in anotacion:
+    if "$" in anotacion:
         return False, "El simbolo '$' no puede estar en la anotacion"
-    elif ":" in anotacion:
+    if ":" in anotacion:
         return False, "El simbolo ':' no puede estar en la anotacion"
-    elif anotacion == "":
+    if anotacion == "":
         return False, "La anotacion esta vacia"
+
+    anotacion = (
+        f"({datetime.datetime.now().strftime('%Y/%m/%d // %H-%M')}) " + anotacion
+    )
+    anotacion += f": $ {monto}"
+    if anotaciones == "n":
+        anotaciones = anotacion
     else:
-        anotacion = (
-            f"({datetime.datetime.now().strftime('%Y/%m/%d // %H-%M')}) " + anotacion
-        )
-        anotacion += f": $ {monto}"
-        if anotaciones == "n":
-            anotaciones = anotacion
-        else:
-            anotacion = "_" + anotacion
-            anotaciones += anotacion
+        anotacion = "_" + anotacion
+        anotaciones += anotacion
 
-        multas_actuales: int = df["multas extra"][index]
+    multas_actuales: int = df["multas extra"][index]
 
-        multas_actuales += monto
+    multas_actuales += monto
 
-        df.loc[index, "anotaciones generales"] = anotaciones
-        df.loc[index, "multas extra"] = multas_actuales
+    df.loc[index, "anotaciones generales"] = anotaciones
+    df.loc[index, "multas extra"] = multas_actuales
 
-        df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
-        df.to_csv(ajustes["nombre df"])
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+    df.to_csv(ajustes["nombre df"])
 
-        return True, ""
+    return True, ""
 
 
 def modificar_anotacion(index: int, pos: int, new_elem: str, ajustes: dict, df):
@@ -54,24 +54,25 @@ def modificar_anotacion(index: int, pos: int, new_elem: str, ajustes: dict, df):
 
     if "_" in new_elem:
         return False, "El simbolo '_' no puede estar en la anotacion"
-    elif "$" in new_elem:
+    if "$" in new_elem:
         return False, "El simbolo '$' no puede estar en la anotacion"
-    elif ":" in new_elem:
+    if ":" in new_elem:
         return False, "El simbolo ':' no puede estar en la anotacion"
+
+    anotacion: str = anotaciones[pos]
+    monto: str = anotacion[anotacion.find(":") :]
+    if new_elem == "":
+        anotaciones[pos] = "n" + monto
     else:
-        anotacion: str = anotaciones[pos]
-        monto: str = anotacion[anotacion.find(":") :]
-        if new_elem == "":
-            anotaciones[pos] = "n" + monto
-        else:
-            anotaciones[pos] = new_elem + monto
+        anotaciones[pos] = new_elem + monto
 
-        anotaciones = "_".join(anotaciones)
+    anotaciones = "_".join(anotaciones)
 
-        df.loc[index, "anotaciones generales"] = anotaciones
-        df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
-        df.to_csv(ajustes["nombre df"])
-        return True, ""
+    df.loc[index, "anotaciones generales"] = anotaciones
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+    df.to_csv(ajustes["nombre df"])
+
+    return True, ""
 
 
 def buscar_boleta(df, rifa_a_buscar: str, boleta_a_buscar: str, poscion_boleta: int):
@@ -85,7 +86,7 @@ def buscar_boleta(df, rifa_a_buscar: str, boleta_a_buscar: str, poscion_boleta: 
 
     if len(numeros) <= 0:
         return -1
-    elif len(numeros) == 1:
+    if len(numeros) == 1:
         return numeros[0]
 
     for i in numeros:
