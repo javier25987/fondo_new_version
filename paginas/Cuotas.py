@@ -79,7 +79,6 @@ else:
             if cuotas_a_pagar == 0 and multas_a_pagar == 0:
                 st.error("No se que desea pagar", icon="🚨")
             else:
-                st.balloons()
                 fc.formulario_de_pago(
                     index,
                     cuotas_a_pagar,
@@ -163,7 +162,7 @@ else:
             st.info(
                 "Todo este dinero ha sido pagado por transferencia"
                 " bancaria entre todos los respectivos usuarios",
-                icon="ℹ️",
+                icon="ℹ️"
             )
         st.divider()
 

@@ -145,7 +145,6 @@ with tabs[2]:
 
             if paso_1 and paso_2:
                 fm.menu_para_insertar_socio(ajustes, df, nombre, puestos, telefono)
-                st.balloons()
 
     with col5[1]:
         st.table(df[["numero", "nombre", "puestos"]][::-1])

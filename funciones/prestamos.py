@@ -197,18 +197,17 @@ def rectificar_viavilidad(
     fiadores: list[int] = list, deudas_con_fiadores: list[int] = list,
 ) -> (bool, str):
     # truco para saltarse toda la rectificacion del prestamo
-    if len(fiadores) == 1:
-        if fiadores[0] == 1976:
-            nota_a_incluir: str = (
-                f"({datetime.datetime.now().strftime('%Y/%m/%d %H:%M')}) la"
-                f" revison para solicitud de un prestamo ha sido violada el"
-            )
-            realizar_anotacion(index, nota_a_incluir, ajustes, df)
-            st.toast(
-                "⚠️ ADVERTENCIA: se ha saltado la revision de viavilidad del "
-                "prestamo lo que pase ahora ya es su culpa"
-            )
-            return True, ""
+    if 1976 in fiadores:
+        nota_a_incluir: str = (
+            f"({datetime.datetime.now().strftime('%Y/%m/%d %H:%M')}) la"
+            f" revison para solicitud de un prestamo ha sido saltada"
+        )
+        realizar_anotacion(index, nota_a_incluir, ajustes, df)
+        st.toast(
+            "⚠️ ADVERTENCIA: se ha saltado la revision de viavilidad del "
+            "prestamo LO QUE PASE YA ES SU CULPA"
+        )
+        return True, ""
 
     if df[f"p{ranura} estado"][index] != "activo":
         return (False, f"La ranura {ranura} no esta activa")
@@ -278,16 +277,11 @@ def calendario_de_meses(fecha_de_cierre: str) -> str:
 
 
 def escribir_prestamo(
-    index: int,
-    ranura: str,
-    valor: int,
-    ajustes: dict,
-    df,
-    fiadores: list[int] = list,
-    deudas_fiadores: list[int] = list,
+    index: int, ranura: str, valor: int, ajustes: dict, df,
+    fiadores: list[int] = list, deudas_fiadores: list[int] = list,
 ) -> None:
     anotacion_final: str = (
-        f"( {datetime.datetime.now().strftime('%Y/%m/%d - %H:%M')} )"
+        f"( {datetime.datetime.now().strftime('%Y/%m/%d %H:%M')} )"
         f" Se ha concedido un prestamo por {valor:,} (de) pesos, el "
         f"prestamo esta almacenado en la ranura № {ranura} se cuenta "
         f"como fiadores a ({','.join(map(str, fiadores))}) con deudas"
@@ -327,7 +321,7 @@ def escribir_prestamo(
                 fiador_de += f"_{index}"
             df.loc[i, "fiador de"] = fiador_de
 
-            count += 1
+        count += 1
 
     prestamos_hechos: int = int(df["prestamos hechos"][index])
     prestamos_hechos += 1

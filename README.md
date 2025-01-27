@@ -11,8 +11,6 @@
 ## Deuda tecnica
 
 * algoritmo para identificar boletas repetidas (seccion de rifas)
-* hacer que las multas generales se sumen a la columna de multas
-* hacer que el truco para saltarse la rectificacion de prestamos funcione con mas gente
 
 ## Secciones finalizadas
 
@@ -33,8 +31,7 @@ hechos en el repositorio madre esto no se considera como un error ya que es
 solo una funcion que puede ser descartada por el problema de que git no resuelve
 los conflictos de un merge automaticamente
 
-> actualmente es esencial a la hora de descargar el programa borrar el archivo
-> .gitignore de lo contrario los cambios no se guargaran en el repositorio remoto
+> actualmente es esencial a la hora de descargar el programa borrar el archivo `.gitignore` de lo contrario los cambios no se guargaran en el repositorio remoto
 
 ## Codigo que elimine y podria servir en un futuro
 

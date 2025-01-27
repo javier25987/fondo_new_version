@@ -28,8 +28,8 @@ if "usuario_actual_cuotas" not in st.session_state:
 if "usuario_actual_prestamos" not in st.session_state:
     st.session_state.usuario_actual_prestamos = -1
 
-if "usuario_actual_ver" not in st.session_state:
-    st.session_state.usuario_actual_ver = -1
+if "usuario_actual_anotaciones" not in st.session_state:
+    st.session_state.usuario_actual_anotaciones = -1
 
 if "usuario_actual_rifas" not in st.session_state:
     st.session_state.usuario_actual_rifas = -1
@@ -53,6 +53,7 @@ paginas_generales: list = [
     st.Page("paginas/Prestamos.py", title="Prestamos", icon="💵"),
     st.Page("paginas/AnalisUsuarios.py", title="Analizar Ususarios", icon="📈"),
     st.Page("paginas/Rifas.py", title="Rifas", icon="🗒️"),
+    st.Page("paginas/Anotaciones.py", title="Anotaciones", icon="📘"),
     st.Page("paginas/VerSocios.py", title="Ver Usuarios", icon="🔎"),
 ]
 
@@ -61,7 +62,7 @@ paginas_de_adiministrador: list = [
     st.Page(
         "administrador/ModificarSocios.py",
         title="Modificar Usuarios",
-        icon="📖",
+        icon="📖"
     ),
     st.Page("administrador/Ajustes.py", title="Ajustes", icon="⚙️"),
     st.Page("session/logout.py", title="Salir", icon=":material/logout:"),

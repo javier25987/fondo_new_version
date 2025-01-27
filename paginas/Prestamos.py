@@ -154,7 +154,6 @@ else:
                     deudas_prestamo,
                 )
                 if estado_prestamo[0]:
-                    st.balloons()
                     fp.formulario_de_prestamo(
                         index,
                         ranura_prestamo,
