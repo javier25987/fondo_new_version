@@ -1,5 +1,7 @@
 # Proyecto fondo san javier
 
+> Link al repositorio [padre](https://github.com/javier25987/fondo_new_version)
+
 ## Anotaciones
 
 > En el fondo hay una gerarquia de simbolos para separar los elementos de un string la gerarquia es la siguiente ```_ >> # >> ?```
@@ -27,7 +29,7 @@
 ## Errores de el programa
 
 actualmenre solo hay que añadir un boton de actualizacion que copie todos los
-hechos en el repositorio madre esto no se considera como un error ya que es
+hechos en el repositorio padre esto no se considera como un error ya que es
 solo una funcion que puede ser descartada por el problema de que git no resuelve
 los conflictos de un merge automaticamente
 
