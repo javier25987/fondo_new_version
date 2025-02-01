@@ -29,52 +29,50 @@ rifas: list[str] = ["1", "2", "3", "4"]
 
 for i, j in zip(tabs[:-1], rifas):
     with i:
-        if not ajustes[f"r{j} estado"]:
+        if ajustes[f"r{j} estado"]:
+            cols = st.columns(2)
+            with cols[0]:
+                st.header("Entregar talonarios:")
+                if st.button("Entregar talonario", key=f"key: {key}"):
+                    fr.cargar_talonario(index, j, ajustes, df)
+                key += 1
+
+            with cols[1]:
+                st.header("Deudas en boletas:")
+                deuda_act: int = df[f"r{j} deudas"][index]
+                st.write(f"Deudas en boletas: {'{:,}'.format(deuda_act)}")
+                n_pago: int = st.number_input(
+                    "Pago por boletas:", step=1, value=0, key=f"key: {key}"
+                )
+                key += 1
+
+                if st.button("Pagar", key=f"key: {key}"):
+                    if deuda_act <= 0:
+                        st.error("No entiendo que desea pagar", icon="🚨")
+                    else:
+                        if n_pago > deuda_act:
+                            st.error(
+                                "No se puede pagar mas de lo que se debe", icon="🚨"
+                            )
+                        elif n_pago <= 0:
+                            st.error("No se puede pagar cero o menos", icon="🚨")
+                        else:
+                            fr.pago_de_boletas(index, n_pago, j, ajustes, df)
+                key += 1
+
+            st.divider()
+
+            st.header("Talonarios entregados:")
+            boletas: str = df[f"r{j} boletas"][index]
+            if boletas == "n":
+                st.subheader("🚨 No se han entregado boletas")
+            else:
+                talonarios: list = fr.crear_tablas_talonarios(boletas)
+                for l_boleta in talonarios:
+                    st.table(l_boleta)
+        else:
             st.title("Rifas")
             st.title("🚨 La rifa no esta activa")
-            st.stop()
-
-        cols = st.columns(2)
-        with cols[0]:
-            st.header("Entregar talonarios:")
-            if st.button("Entregar talonario", key=f"key: {key}"):
-                fr.cargar_talonario(index, j, ajustes, df)
-            key += 1
-
-        with cols[1]:
-            st.header("Deudas en boletas:")
-            deuda_act: int = df[f"r{j} deudas"][index]
-            st.write(f"Deudas en boletas: {'{:,}'.format(deuda_act)}")
-            n_pago: int = st.number_input(
-                "Pago por boletas:", step=1, value=0, key=f"key: {key}"
-            )
-            key += 1
-
-            if st.button("Pagar", key=f"key: {key}"):
-                if deuda_act <= 0:
-                    st.error("No entiendo que desea pagar", icon="🚨")
-                else:
-                    if n_pago > deuda_act:
-                        st.error(
-                            "No se puede pagar mas de lo que se debe", icon="🚨"
-                        )
-                    elif n_pago <= 0:
-                        st.error("No se puede pagar cero o menos", icon="🚨")
-                    else:
-                        fr.pago_de_boletas(index, n_pago, j, ajustes, df)
-            key += 1
-
-        st.divider()
-
-        st.header("Talonarios entregados:")
-        boletas: str = df[f"r{j} boletas"][index]
-        if boletas == "n":
-            st.subheader("🚨 No se han entregado boletas")
-        else:
-            talonarios: list = fr.crear_tablas_talonarios(boletas)
-            for l_boleta in talonarios:
-                st.table(l_boleta)
-
 
 with tabs[4]:
     st.subheader("Realizar una anotacion:")
