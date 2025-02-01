@@ -41,7 +41,7 @@ with tabs[0]:
         "Anotaciones generales",
         "Prestamos solicitados",
         "Dinero adeudado en prestamos",
-        "Interese vencidos",
+        "Intereses generados",
     ]
 
     values: list[int] = [

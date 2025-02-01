@@ -21,7 +21,7 @@ def arreglar_asuntos(index: int, ajustes: dict, df) -> None:
 
     semanas_revisadas: int = int(df["revisiones"][index])
 
-    calendario: list[datetime] = list(
+    calendario: list[datetime.datetime] = list(
         map(
             lambda x: datetime.datetime(*x),
             map(lambda y: map(int, y.split("/")), ajustes["calendario"].split("_")),
