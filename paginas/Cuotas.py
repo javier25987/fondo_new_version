@@ -74,21 +74,15 @@ with tabs[0]:
         modo_de_pago: str = st.selectbox(
             "Modo de pago:", ("Efecctivo", "Transferencia")
         )
-        st.divider()
 
     if cols_1[0].button("Iniciar proceso de pago"):
         if cuotas_a_pagar == 0 and multas_a_pagar == 0:
             st.error("No se que desea pagar", icon="🚨")
         else:
+            st.balloons()
             fc.formulario_de_pago(
-                index,
-                cuotas_a_pagar,
-                multas_a_pagar,
-                tesorero_a_pagar,
-                modo_de_pago,
-                ajustes,
-                banco,
-                df,
+                index, cuotas_a_pagar, multas_a_pagar, tesorero_a_pagar,
+                modo_de_pago, ajustes, banco, df,
             )
 
     st.divider()

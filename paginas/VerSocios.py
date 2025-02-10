@@ -9,8 +9,8 @@ df = pd.read_csv(ajustes["nombre df"])
 
 tabs = st.tabs(
     [
-        "Buscar Usuarios", "Ver si necesita acuerdo",
-        "Verificar ranura 16", "Buscar boleta", "Tabla de socios"
+        "Buscar Usuarios", "Ver si necesita acuerdo", "Verificar ranura 16",
+        "Buscar boleta", "Tabla de socios"
     ]
 )
 
