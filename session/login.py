@@ -13,7 +13,7 @@ st.markdown(
     """
 )
 
-clave: str = st.text_input("Contraseña de administrador:")
+clave: str = st.text_input("Contraseña de administrador:", type="password")
 
 if st.button("Ingresar"):
     if clave == ajustes["clave de acceso"]:
