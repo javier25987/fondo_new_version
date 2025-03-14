@@ -8,12 +8,12 @@ st.title("Menu de inicio")
 
 st.markdown(
     """
-        Honestamente ya no se que hace con el menu, lo voy a dejar 
-        para almacenar las funciones de guardado en internet y 
-        cargar las multas a todos ya que no se donde poner eso, pero 
-        el menu ya perdio todas las funciones que tenia en la anterior
-        version
-        """
+    Honestamente ya no se que hace con el menu, lo voy a dejar 
+    para almacenar las funciones de guardado en internet y 
+    cargar las multas a todos ya que no se donde poner eso, pero 
+    el menu ya perdio todas las funciones que tenia en la anterior
+    version
+    """
 )
 st.divider()
 
@@ -31,13 +31,7 @@ with col2:
     st.header("Cargar multas")
     st.markdown(
         """
-            Esta parte esta dedicada a cargar las multas para todos los 
-            usuarios de el programa haciendo que a los usuarios que no 
-            pagaron se les sume la multa de la semana correspondiente.
-            > **NOTA:** por favor oprima este boton cada lunes despues 
-            de la hora de cierre
-            """
+        Actualmente el programa automaticamente carga las multas y los
+        intereses no es necesario oprimir ningun boton periodicamente
+        """
     )
-
-    if st.button("Cargar Multas"):
-        fm.cargar_multas(ajustes)
