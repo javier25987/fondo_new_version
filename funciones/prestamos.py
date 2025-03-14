@@ -196,7 +196,7 @@ def rectificar_viavilidad(
     index: int, ranura: str, valor: int, ajustes: dict, df,
     fiadores: list[int] = list, deudas_con_fiadores: list[int] = list,
 ) -> (bool, str):
-    # truco para saltarse toda la rectificacion del prestamo
+    # truco para saltarse toda la asuntos del prestamo
     if 1976 in fiadores:
         nota_a_incluir: str = (
             f"({datetime.datetime.now().strftime('%Y/%m/%d %H:%M')}) la"
@@ -210,26 +210,26 @@ def rectificar_viavilidad(
         return True, ""
 
     if df[f"p{ranura} estado"][index] != "activo":
-        return (False, f"La ranura {ranura} no esta activa")
+        return False, f"La ranura {ranura} no esta activa"
     if index in fiadores:
-        return (False, "Un usuario no puede ser su propio fiador")
+        return False, "Un usuario no puede ser su propio fiador"
     if len(fiadores) != len(set(fiadores)):
-        return (False, "No se permiten fiadores repetidos")
+        return False, "No se permiten fiadores repetidos"
 
     capital_disponible: int = consultar_capital_usuario(index, ajustes, df)
     sum_deudas: int = sum(deudas_con_fiadores)
     if valor == 0:
-        return (False, "Para que hacer un prestamo?")
+        return False, "Para que hacer un prestamo?"
     if sum_deudas > valor:
-        return (False, "La deuda con fiadores supera el valor de el prestamo")
+        return False, "La deuda con fiadores supera el valor de el prestamo"
 
     # rectificar para capital negativo o positivo
 
     if capital_disponible > 0:
         if valor - sum_deudas > capital_disponible:
-            return (False, "El dinero de el usuario no alcanza para el prestamo")
+            return False, "El dinero de el usuario no alcanza para el prestamo"
         if sum_deudas + capital_disponible < valor:
-            return (False, "No alcanza para solitar el prestamo, solicite mas fiadores")
+            return False, "No alcanza para solitar el prestamo, solicite mas fiadores"
     else:
         if sum_deudas < valor:
             return (
@@ -242,9 +242,9 @@ def rectificar_viavilidad(
     for i in fiadores:
         capital_de_fiador: int = consultar_capital_usuario(i, ajustes, df)
         if capital_de_fiador < deudas_con_fiadores[count]:
-            return (False, f"El fiador con puesto №{i} no cuenta con el dinero")
+            return False, f"El fiador con puesto №{i} no cuenta con el dinero"
         if df["estado"][i] != "activo":
-            return (False, f"El fiador con puesto №{i} no esta activo")
+            return False, f"El fiador con puesto №{i} no esta activo"
         count += 1
 
     return True, ""
@@ -346,13 +346,8 @@ def escribir_prestamo(
 
 @st.dialog("Formulario de prestamo")
 def formulario_de_prestamo(
-    index: int,
-    ranura: str,
-    valor: int,
-    ajustes: dict,
-    df,
-    fiadores: list[int] = list,
-    deudas_fiadores: list[int] = list,
+    index: int, ranura: str, valor: int, ajustes: dict, df,
+    fiadores: list[int] = list, deudas_fiadores: list[int] = list,
 ) -> None:
     st.header(f"№ {index}: {df['nombre'][index].title()}")
     st.divider()
@@ -559,6 +554,7 @@ def arreglar_asuntos(index: int, ajustes: dict, df) -> None:
                 prestamo[1] = str(int(intereses))
 
                 df.loc[index, f"p{i} prestamo"] = "_".join(prestamo)
+
                 guardar = True
 
     if guardar:

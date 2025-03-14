@@ -38,17 +38,17 @@ with tabs[0]:
     st.header(f"Numero de telefono: {df['numero celular'][index]}")
 
     st.divider()
-    fc.escribir_cuotas_y_multas(index, ajustes, df)
-    st.divider()
+    # fc.escribir_cuotas_y_multas(index, ajustes, df)
+    # st.divider()
 
-    # df1, df2 = fc.tablas_para_cuotas_y_multas(index, ajustes, df)
-    # col2_1, col2_2 = st.columns(2)
-    #
-    # with col2_1:
-    #     st.table(df1)
-    #
-    # with col2_2:
-    #    st.table(df2)
+    df1, df2 = fc.tablas_para_cuotas_y_multas(index, ajustes, df)
+    col2_1, col2_2 = st.columns(2)
+
+    with col2_1:
+        st.table(df1)
+
+    with col2_2:
+       st.table(df2)
 
     numero_cuotas_a_pagar: int = 50 - df["cuotas"][index].count("p")
 

@@ -243,14 +243,8 @@ def crear_nuevo_cheque(
 
 @st.dialog("Formulario de pago")
 def formulario_de_pago(
-    index: int,
-    cuotas: int,
-    multas: int,
-    tesorero: str,
-    modo_de_pago: str,
-    ajustes: dict,
-    banco: dict,
-    df,
+    index: int, cuotas: int, multas: int, tesorero: str,
+    modo_de_pago: str, ajustes: dict, banco: dict, df
 ) -> None:
     st.header(f"№ {index} - {df['nombre'][index].title()}")
     st.divider()
