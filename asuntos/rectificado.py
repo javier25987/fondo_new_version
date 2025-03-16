@@ -37,13 +37,19 @@ def obtener_ultimo_lunes():
     return ultimo_lunes
 
 
+def hoy_no_es_lunes() -> bool:
+    hoy = datetime.datetime.now()
+    dia_semana = hoy.weekday()
+    return dia_semana != 0
+
+
 def rectificar_todo() -> None:
     # obtener las fechas
     lunes_guardado = abrir_fecha().date()
     ultimo_lunes = obtener_ultimo_lunes().date()
 
     # rectificar si ya paso el lunes
-    if ultimo_lunes > lunes_guardado:
+    if (ultimo_lunes > lunes_guardado) and hoy_no_es_lunes():
 
         print("Es necesario cargar multas e intereses:")
 
