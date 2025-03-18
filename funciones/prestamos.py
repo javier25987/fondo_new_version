@@ -14,7 +14,9 @@ def abrir_usuario(index: int, ajustes: dict, df) -> (bool, str):
     return True, ""
 
 
-def crear_tablas_de_ranura(prestamo: str, fechas: str):
+def crear_tablas_de_ranura(prestamo: str, fechas: str) -> (
+    pd.DataFrame, pd.DataFrame, pd.DataFrame, bool, int
+):
     prestamo: list[str] = prestamo.split("_")
     deudas = int(prestamo[3]) + int(prestamo[1])
     return (
@@ -37,7 +39,7 @@ def crear_tablas_de_ranura(prestamo: str, fechas: str):
     )
 
 
-def ranuras_disponibles(index: int, df):
+def ranuras_disponibles(index: int, df) -> pd.DataFrame:
     funct = lambda x: "✅" if x == "activo" else "🚨"
 
     estado_ranuras: list[str] = list(

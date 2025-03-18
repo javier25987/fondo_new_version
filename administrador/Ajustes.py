@@ -14,7 +14,7 @@ tab = list(
             "Calendario",
             "Cuotas y multas",
             "Contraseñas",
-            "Intereses",
+            "Prestamos",
             "Usuarios",
             "Fechas",
             "Tabla de usuarios",
@@ -189,7 +189,9 @@ with tab[3]:
     with col3_2[0]:
         st.markdown("### Menos de el tope:")
         st.markdown(
-            f"##### el interes actual por prestamo es: {ajustes['interes < tope']} %"
+            f"##### el interes actual por prestamo es: {
+                ajustes['interes < tope']
+            } %"
         )
     with col3_2[1]:
         nuevo_interes_m_tope: int = st.number_input(
@@ -206,7 +208,9 @@ with tab[3]:
     with col3_3[0]:
         st.markdown("### Mas de el tope:")
         st.markdown(
-            f"##### el interes actual por prestamo es: {ajustes['interes > tope']} %"
+            f"##### el interes actual por prestamo es: {
+                ajustes['interes > tope']
+            } %"
         )
     with col3_3[1]:
         nuevo_interes_M_tope: int = st.number_input(
@@ -214,6 +218,36 @@ with tab[3]:
         )
         if st.button("Modificar", key=f"key: {key}"):
             ajustes["interes > tope"] = nuevo_interes_M_tope
+            fa.guardar_y_avisar(ajustes)
+        key += 1
+
+    st.divider()
+
+    st.markdown("## Capital usable para solicitud:")
+
+    col3_4 = st.columns(2)
+
+    with col3_4[0]:
+        st.markdown(
+            f"##### Actual mente se puede usar un `{
+                ajustes["capital usable"]
+            }%` del capital guardado."
+        )
+
+        st.markdown(
+            "> **NOTA:** el nuevo valor debe ingresarse como un "
+            "numero de 1 a 100 que representa el porcentage no "
+            "introduzca simbolos extra, comas o puntos ya que"
+            " esto puede afectar al programa"
+        )
+
+    with col3_4[1]:
+        nuevo_capital_usable: int = st.number_input(
+            "Nuevo capital usable [...]%:", value=2, step=1
+        )
+
+        if st.button("Modificar", key=f"key: {key}"):
+            ajustes["capital usable"] = nuevo_capital_usable
             fa.guardar_y_avisar(ajustes)
         key += 1
 
