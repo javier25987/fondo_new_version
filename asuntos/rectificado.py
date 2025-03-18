@@ -59,6 +59,19 @@ def rectificar_todo() -> None:
 
         ranuras: list[str] = list(map(str, range(1, 17)))
 
+        calendario: list[datetime.datetime] = list(
+            map(
+                lambda x: datetime.datetime(*x),
+                map(lambda y: map(int, y.split("/")), ajustes["calendario"].split("_")),
+            )
+        )
+
+        fecha_actual: datetime = datetime.datetime.now()
+
+        semanas_a_revisar: int = sum(
+            map(lambda x: 1 if x < fecha_actual else 0, calendario)
+        )
+
         for index in tqdm(range(ajustes["usuarios"])): # iteramos sobre todos los usuarios
 
             # rectificamos para cuotas
@@ -66,19 +79,6 @@ def rectificar_todo() -> None:
             multas: list = list(df["multas"][index])
 
             semanas_revisadas: int = int(df["revisiones"][index])
-
-            calendario: list[datetime.datetime] = list(
-                map(
-                    lambda x: datetime.datetime(*x),
-                    map(lambda y: map(int, y.split("/")), ajustes["calendario"].split("_")),
-                )
-            )
-
-            fecha_actual: datetime = datetime.datetime.now()
-
-            semanas_a_revisar: int = sum(
-                map(lambda x: 1 if x < fecha_actual else 0, calendario)
-            )
 
             if semanas_a_revisar > semanas_revisadas:
                 for i in range(50):
@@ -132,3 +132,5 @@ def rectificar_todo() -> None:
 
         cargar_ultimo_lunes()
         print("Proceso finalizado.")
+
+    else: print("No fue necesario rectificar multas o intereses.")
